@@ -1,0 +1,133 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <RootNamespace></RootNamespace>
+    <ProjectGuid>{6C9BDB1C-B9C0-3603-47BB-855F42889D3A}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyName>Assembly-CSharp</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_5_OR_NEWER;UNITY_5_6_OR_NEWER;UNITY_5_6_1;UNITY_5_6;UNITY_5;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_DUCK_TYPING;ENABLE_GENERICS;ENABLE_PVR_GI;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_RUNTIME_NAVMESH_BUILDING;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_LZMA;ENABLE_UNITYEVENTS;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;ENABLE_NATIVE_ARRAY;INCLUDE_DYNAMIC_GI;INCLUDE_GI;PLATFORM_SUPPORTS_MONO;RENDER_SOFTWARE_CURSOR;INCLUDE_PUBNUB;ENABLE_PLAYMODE_TESTS_RUNNER;ENABLE_SCRIPTING_NEW_CSHARP_COMPILER;ENABLE_VIDEO;UNITY_STANDALONE_WIN;UNITY_STANDALONE;ENABLE_SUBSTANCE;ENABLE_RUNTIME_GI;ENABLE_MOVIES;ENABLE_NETWORK;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_EVENT_QUEUE;ENABLE_CLUSTERINPUT;ENABLE_VR;ENABLE_WEBSOCKET_HOST;ENABLE_MONO;NET_2_0_SUBSET;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;ENABLE_NATIVE_ARRAY_CHECKS;UNITY_TEAM_LICENSE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Temp\bin\Release\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEngine">
+      <HintPath>D:/unity5.6.1f1/Editor/Data/Managed/UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>D:/unity5.6.1f1/Editor/Data/Managed/UnityEditor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Scripts\Combat\Controller\Base\Controller.cs" />
+     <Compile Include="Assets\Scripts\Combat\Controller\CombatController.cs" />
+     <Compile Include="Assets\Scripts\Combat\Controller\GridContainer.cs" />
+     <Compile Include="Assets\Scripts\Combat\Grid.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Base\TerrainBase.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Building\Airport.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Building\City.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Building\Factory.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Building\HQ.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Building\Shipyard.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Mountain.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Plain.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Reef.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Road.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Sea.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Shoal.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Woods.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\ATAir.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\ATAirMissile.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\ATInfantry.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Artillery.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Base\Unit.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\BattleShip.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Bomber.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\CannonTank.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Chopter.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Destroyer.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Fighter.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\HeavyTank.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Infantry.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\LandingShip.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\LightTank.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Rockets.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Scout.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Submarine.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\TransportChopter.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Transporter.cs" />
+     <Compile Include="Assets\Scripts\General Utility\CameraController.cs" />
+     <Compile Include="Assets\Scripts\General Utility\Global.cs" />
+     <Compile Include="Assets\Scripts\General Utility\GridType.cs" />
+     <Compile Include="Assets\Scripts\General Utility\Log.cs" />
+     <Compile Include="Assets\Scripts\General Utility\PathNav.cs" />
+     <Compile Include="Assets\Scripts\General Utility\Point.cs" />
+     <Compile Include="Assets\Scripts\General Utility\Singletion.cs" />
+     <Compile Include="Assets\Scripts\General Utility\SoundManager.cs" />
+     <Compile Include="Assets\Scripts\Level\EditorController.cs" />
+     <Compile Include="Assets\Scripts\Level\Level.cs" />
+     <Compile Include="Assets\Scripts\Level\MapLoader.cs" />
+     <Compile Include="Assets\Scripts\MainMenu\MainMenuMananger.cs" />
+     <Compile Include="Assets\Scripts\MainMenu\RollingMenuController.cs" />
+     <None Include="Assets\Levels\Test.txt" />
+     <None Include="Assets\Resources\Levels\Test.txt" />
+     <None Include="Assets\Levels\LevelsList.txt" />
+ <Reference Include="UnityEngine.UI">
+ <HintPath>D:/unity5.6.1f1/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Networking">
+ <HintPath>D:/unity5.6.1f1/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.TestRunner">
+ <HintPath>D:/unity5.6.1f1/Editor/Data/UnityExtensions/Unity/TestRunner/UnityEngine.TestRunner.dll</HintPath>
+ </Reference>
+ <Reference Include="nunit.framework">
+ <HintPath>D:/unity5.6.1f1/Editor/Data/UnityExtensions/Unity/TestRunner/nunit.framework.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Analytics">
+ <HintPath>D:/unity5.6.1f1/Editor/Data/UnityExtensions/Unity/UnityAnalytics/UnityEngine.Analytics.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.HoloLens">
+ <HintPath>D:/unity5.6.1f1/Editor/Data/UnityExtensions/Unity/UnityHoloLens/RuntimeEditor/UnityEngine.HoloLens.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.VR">
+ <HintPath>D:/unity5.6.1f1/Editor/Data/UnityExtensions/Unity/UnityVR/RuntimeEditor/UnityEngine.VR.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>

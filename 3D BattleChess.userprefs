@@ -1,0 +1,21 @@
+﻿<Properties StartupItem="Assembly-CSharp.csproj">
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" PreferredExecutionTarget="Unity.Instance.Unity Editor" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="Assets\Scripts\General Utility\PathNav.cs">
+    <Files>
+      <File FileName="Assets\Scripts\Level\EditorController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Combat\Grid.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Combat\Terrain\Building\HQ.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\General Utility\PathNav.cs" Line="197" Column="2" />
+      <File FileName="Assets\Scripts\General Utility\Point.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\General Utility\Log.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\Combat\Controller\CombatController.cs" Line="1" Column="1" />
+      <File FileName="Assets\Scripts\General Utility\CameraController.cs" Line="1" Column="1" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore>
+      <Breakpoint file="C:\Users\孙少爷\Desktop\3D BattleChess\Assets\Scripts\General Utility\PathNav.cs" line="195" column="1" />
+    </BreakpointStore>
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
