@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
@@ -22,5 +23,11 @@ public class Transporter : Unit {
     {
         GetComponent<MeshRenderer>().material = Resources.Load<Material>("Sprites/Unit/Materials/TransporterFriendly");
         base.SetFriendly();
+    }
+
+    protected override List<Point> SetAttackRange()
+    {
+        virtualRange = new List<Point>();
+        return virtualRange;
     }
 }

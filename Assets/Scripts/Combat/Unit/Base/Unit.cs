@@ -335,6 +335,8 @@ public class Unit : Grid {
         virtualRange.Add(new Point(0, -1));
         virtualRange.Add(new Point(-1, 0));
 
+        Debug.Log(gridType);
+
         return virtualRange;
     }
 
@@ -352,21 +354,23 @@ public class Unit : Grid {
             TerrainBase tb;
             if (GridContainer.Instance.TerrainDic.TryGetValue(new Point(x + p.X, z + p.Z), out tb))
             {
-                rangeList.Add(tb.gridID);
+                rangeList.Add(tb.gridID);   //得到攻击范围
             }
         }
     }
 
     /// <summary>
-    /// 显示攻击范围
+    /// 显示攻击范围，并范围是否能攻击
     /// </summary>
-    public void ShowAttackRange()
+    public bool ShowAttackRange()
     {
-        for (int i = 0; i < RangeList.Count; i++)
+        if (rangeList.Count == 0) return false;
+        for (int i = 0; i < rangeList.Count; i++)
         {
-            Point p = RangeList[i];
+            Point p = rangeList[i];
             GridContainer.Instance.TerrainDic[p].SetHighLight();
         }
+        return true;
     }
 
     /// <summary>
@@ -400,7 +404,7 @@ public class Unit : Grid {
     {
         int defendStar = GridContainer.Instance.TerrainDic[gridID].DefendStar;
 
-        firePower *= (1/defendStar);
+        firePower *= (1/(float)defendStar);
 
         HP -= firePower;
     }
@@ -419,6 +423,8 @@ public class Unit : Grid {
     /// </summary>
     public void BeDestroyed()
     {
+        if(movedToken!=null)
+            Destroy(movedToken.gameObject);
         Destroy(gameObject);
         GridContainer.Instance.UnitDic.Remove(gridID);
     }

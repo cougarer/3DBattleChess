@@ -185,7 +185,10 @@ public class CombatController : MonoBehaviour {
     void OnMoveEnd()
     {
         firstClick = 3;
-        PathNav.CurrentMovingUnit.ShowAttackRange();
+        if (PathNav.bMoving)
+            PathNav.CurrentMovingUnit.ShowAttackRange();
+        else
+            firstClick = 1;
     }
     /// <summary>
     /// 战斗模式下取消点击的回调函数

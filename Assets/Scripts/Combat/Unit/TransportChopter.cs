@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
@@ -22,5 +23,11 @@ public class TransportChopter : Unit {
     {
         GetComponent<MeshRenderer>().material = Resources.Load<Material>("Sprites/Unit/Materials/TransportChopterFriendly");
         base.SetFriendly();
+    }
+
+    protected override List<Point> SetAttackRange()
+    {
+        List<Point> p = new List<Point>();
+        return p;
     }
 }
