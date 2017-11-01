@@ -25,9 +25,9 @@ public class Unit : Grid {
     protected List<Point> rangeList; //实际的范围
     protected List<Point> virtualRange;   //设定的范围
 
-    public int HP;
+    public float HP;
     public int Oil;
-    public int FirePower;
+    public float FirePower;
     [HideInInspector]
     public bool IsMoveable
     {
@@ -55,15 +55,6 @@ public class Unit : Grid {
         throw new System.Exception("Unit grid can not be Neutral!");
     }
     #endregion
-
-    /// <summary>
-    /// 设置高度
-    /// </summary>
-    /// <param name="h"></param>
-    public override void SetHeight(float h)
-    {
-        base.SetHeight(h);
-    }
 
     #region 高亮
     /// <summary>
@@ -250,16 +241,88 @@ public class Unit : Grid {
     #endregion
 
     #region 攻击
-    public void Attack(Unit targetUnit)
+    /// <summary>
+    /// 还击
+    /// </summary>
+    /// <param name="targetUnit"></param>
+    public void AttackPassive(Unit targetUnit)
     {
-        switch (attackType)
-        { 
-            case 
-        }
+        float firePower;
 
+        GetDamageNum(out firePower, attackType, targetUnit.armorType);
+        firePower *= 0.7f;
 
-        Debug.Log(gridType + "攻击" + targetUnit.gridType);
+        targetUnit.BeAttacked(firePower);
     }
+
+    /// <summary>
+    /// 主动攻击
+    /// </summary>
+    /// <param name="targetUnit"></param>
+    public void AttackInitiative(Unit targetUnit)
+    {
+        float firePower;   //firePower实际伤害
+
+        GetDamageNum(out firePower, attackType, targetUnit.armorType);
+
+        targetUnit.BeAttacked(firePower);
+    }
+
+    /// <summary>
+    /// 根据护甲和攻击类型通过不同的计算公式计算伤害量
+    /// </summary>
+    /// <param name="firePower"></param>
+    /// <param name="self"></param>
+    /// <param name="target"></param>
+    void GetDamageNum(out float firePower,AttackType self, ArmorType target)
+    {
+        firePower = FirePower;
+        switch (attackType)
+        {
+            case AttackType.Bullet:
+                {
+                    switch (target)
+                    {
+                        case ArmorType.Men:
+                            firePower *= 1.5f;
+                            break;
+                        case ArmorType.Plane:
+                            firePower *= 3;
+                            break;
+                        case ArmorType.Ship:
+                            firePower *= 0.2f;
+                            break;
+                        case ArmorType.Vehicle:
+                            firePower *= 0.6f;
+                            break;
+                    }
+                    break;
+                }
+            case AttackType.Explosion:
+                {
+                    switch (target)
+                    {
+                        case ArmorType.Men:
+                            firePower *= 0.9f;
+                            break;
+                        case ArmorType.Plane:
+                            firePower *= 2;
+                            break;
+                        case ArmorType.Ship:
+                            firePower *= 2.5f;
+                            break;
+                        case ArmorType.Vehicle:
+                            firePower *= 2.2f;
+                            break;
+                    }
+                }
+                break;
+            case AttackType.NoWeapon:
+                firePower = 0;break;
+            default: throw new Exception("未知攻击类型");
+        }
+    }
+
     /// <summary>
     /// 重写本方法来设定单位的攻击范围
     /// </summary>
@@ -274,8 +337,9 @@ public class Unit : Grid {
 
         return virtualRange;
     }
+
     /// <summary>
-    /// 从设定的攻击范围推算实际攻击范围
+    /// 从重写的SetAttackRange方法推算实际攻击范围
     /// </summary>
     private void GetAttackPoint()
     {
@@ -292,6 +356,7 @@ public class Unit : Grid {
             }
         }
     }
+
     /// <summary>
     /// 显示攻击范围
     /// </summary>
@@ -303,6 +368,7 @@ public class Unit : Grid {
             GridContainer.Instance.TerrainDic[p].SetHighLight();
         }
     }
+
     /// <summary>
     /// 判断能否攻击到
     /// </summary>
@@ -312,6 +378,7 @@ public class Unit : Grid {
     {
         return RangeList.Contains(pos) ? true : false;
     }
+
     /// <summary>
     /// 停止显示攻击范围
     /// </summary>
@@ -323,6 +390,37 @@ public class Unit : Grid {
         }
         rangeList.Clear();
         rangeList = null;
+    }
+
+    /// <summary>
+    /// 被攻击
+    /// </summary>
+    /// <param name="firePower"></param>
+    public void BeAttacked(float firePower)
+    {
+        int defendStar = GridContainer.Instance.TerrainDic[gridID].DefendStar;
+
+        firePower *= (1/defendStar);
+
+        HP -= firePower;
+    }
+
+    /// <summary>
+    /// 判断单位是否存活
+    /// </summary>
+    /// <returns></returns>
+    public bool isAlive()
+    {
+        return HP > 0 ? true : false;
+    }
+
+    /// <summary>
+    /// 龙卷风摧毁停车场
+    /// </summary>
+    public void BeDestroyed()
+    {
+        Destroy(gameObject);
+        GridContainer.Instance.UnitDic.Remove(gridID);
     }
 #endregion
 }

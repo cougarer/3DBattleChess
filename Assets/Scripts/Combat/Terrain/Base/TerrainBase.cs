@@ -8,7 +8,7 @@ using UnityEngine;
 public abstract class TerrainBase : Grid
 {
     public int OilCost;
-
+    public int DefendStar;
 
     /// <summary>
     /// 向左旋转

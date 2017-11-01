@@ -157,7 +157,23 @@ public class CombatController : MonoBehaviour {
                 Unit targetUnit;
                 if (GridContainer.Instance.UnitDic.TryGetValue(clickPos, out targetUnit)&&targetUnit.Side!= PathNav.CurrentMovingUnit.Side)
                 {
-                    PathNav.CurrentMovingUnit.Attack(targetUnit);
+                    PathNav.CurrentMovingUnit.AttackInitiative(targetUnit);
+
+                    if (PathNav.CurrentMovingUnit.isAlive())
+                    {
+                        if (targetUnit.isAlive())
+                        {
+                            targetUnit.AttackPassive(PathNav.CurrentMovingUnit);
+                        }
+                        else
+                        {
+                            targetUnit.BeDestroyed();
+                        }
+                    }
+                    else
+                    {
+                        PathNav.CurrentMovingUnit.BeDestroyed();
+                    }
 
                     firstClick = 1;
                     PathNav.CurrentMovingUnit.StopShowAttackRange();
