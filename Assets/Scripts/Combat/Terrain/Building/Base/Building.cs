@@ -58,7 +58,6 @@ public class Building : TerrainBase
 
     public override void OnInstatiate()
     {
-        Debug.Log(oldCapturePoint);
         oldCapturePoint = capturePoint;    //记录原有的占领点数
     }
 }

@@ -124,7 +124,7 @@ public class CombatController : MonoBehaviour {
             }
             else if(tb.IsTerrain())   //玩家点击的是地形
             {
-
+                Debug.Log("asd");
             }
 
             return;

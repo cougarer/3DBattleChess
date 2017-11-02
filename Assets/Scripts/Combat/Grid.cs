@@ -18,7 +18,7 @@ public abstract class Grid : MonoBehaviour
     /// <returns></returns>
     public bool IsTerrain()
     {
-        if (gridType >= GridType.Plain && gridType <= GridType.Woods) return true;
+        if (this is TerrainBase) {Debug.Log("asd"); return true; }
         else return false;
     }
 
