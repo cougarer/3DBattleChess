@@ -33,6 +33,7 @@ public class Factory : Building
     public override void OnInstatiate()
     {
         SetHeight(0.4f);
+        base.OnInstatiate();
     }
 
 }

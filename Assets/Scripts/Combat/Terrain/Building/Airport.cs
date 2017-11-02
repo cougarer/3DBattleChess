@@ -10,7 +10,6 @@ public class Airport : Building
 
 	void Start ()
     {
-        Debug.Log(capturePoint);
     }
 
     public override void SetEnemy()
@@ -34,6 +33,7 @@ public class Airport : Building
     public override void OnInstatiate()
     {
         SetHeight(0.4f);
+        base.OnInstatiate();
     }
 
 }

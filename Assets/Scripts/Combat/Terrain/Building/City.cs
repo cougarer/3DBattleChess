@@ -34,7 +34,9 @@ public class City : Building
     public override void OnInstatiate()
     {
         SetHeight(0.4f);
+        base.OnInstatiate();
 
+        #region 统计每个阵营有几个city，方便加钱
         if (!GridContainer.isEditorMode)
         {
             switch (Side)
@@ -51,6 +53,7 @@ public class City : Building
                     }
             }
         }
+        #endregion
     }
 
 }

@@ -159,7 +159,7 @@ public class CombatController : MonoBehaviour {
                         Building b = (Building)tb;
                         CaptureUnit cu = (CaptureUnit)PathNav.CurrentMovingUnit;
 
-                        Debug.Log("占领");
+                        Debug.Log("尝试占领");
 
                         b.BeCapture(cu);
                     }

@@ -45,5 +45,6 @@ public class HQ : Building
     public override void OnInstatiate()
     {
         SetHeight(0.8f);
+        base.OnInstatiate();
     }
 }

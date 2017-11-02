@@ -5,7 +5,7 @@ using UnityEngine;
 [System.Serializable]
 public class Building : TerrainBase
 {
-    private int oldCapturePoint;
+    protected int oldCapturePoint;
 
     public int capturePoint;
 
@@ -17,7 +17,6 @@ public class Building : TerrainBase
 
 	void Start ()
     {
-        oldCapturePoint = capturePoint;    //记录原有的占领点数
         Debug.Log(oldCapturePoint);
 	}
 
@@ -27,15 +26,12 @@ public class Building : TerrainBase
         {
             currentCapturingUnit = captureUnit;
             capturePoint = oldCapturePoint;
+            Debug.Log(oldCapturePoint);
         }
 
         currentCapturingUnit = captureUnit;
 
-        Debug.Log(capturePoint);
-
         capturePoint -= captureUnit.CaptureCapablility;
-
-        Debug.Log(captureUnit.CaptureCapablility);
 
         if (capturePoint <= 0)  //被占领了
         {
@@ -44,12 +40,12 @@ public class Building : TerrainBase
             {
                 case SideType.Enemy:
                     {
-                        SetFriendly();
+                        SetEnemy();
                     }
                     break;
                 case SideType.Friendly:
                     {
-                        SetEnemy();
+                        SetFriendly();
                     }
                     break;
             }
@@ -58,5 +54,11 @@ public class Building : TerrainBase
     public void ResetCapturePoint()
     {
         capturePoint = oldCapturePoint;
+    }
+
+    public override void OnInstatiate()
+    {
+        Debug.Log(oldCapturePoint);
+        oldCapturePoint = capturePoint;    //记录原有的占领点数
     }
 }

@@ -128,7 +128,6 @@ public class GridContainer : Singletion<GridContainer> {
 		}
         #endregion
         tb.OnInstatiate();
-
         //静态物体，优化batch
         if (!isEditorMode)
         {
