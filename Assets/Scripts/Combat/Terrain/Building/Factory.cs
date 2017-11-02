@@ -5,12 +5,11 @@ using UnityEngine;
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class Factory : TerrainBase
+public class Factory : Building
 {
 
 	void Start ()
     {
-        
     }
 
     public override void SetEnemy()

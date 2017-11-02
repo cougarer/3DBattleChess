@@ -14,8 +14,6 @@ public class CombatController : MonoBehaviour {
     public static int p1CitysCount = 0;
     public static int p2CitysCount = 0;
 
-
-
     public static bool isPlayer1=false;  //玩家作为玩家1进行游戏
     public static bool isPlayer2=false;  //玩家作为玩家2进行游戏
 
@@ -73,7 +71,7 @@ public class CombatController : MonoBehaviour {
         ShowGridDetailPanel(clickPos);
         #endregion
 
-        #region 第一次点击
+        #region 第一次点击   //选中单位，选中建筑
         if (firstClick==1)
         {
             TerrainBase tb = GridContainer.Instance.TerrainDic[clickPos];
@@ -135,12 +133,12 @@ public class CombatController : MonoBehaviour {
 
         #endregion
 
-        #region 第二次点击
+        #region 第二次点击   //单位移动
         if(firstClick==2)
         {
             if (PathNav.ReachablePoints.Contains(clickPos))  //如果格子能走到那里
             {
-                firstClick=0;   //屏蔽点击
+                firstClick=0;   //单位移动时屏蔽点击
                 PathNav.bMoving = true;
                 PathNav.StopShowUnitMoveRange();
                 PathNav.CurrentMovingUnit.UnitMoveToTargetPos(clickPos, OnMoveEnd);
@@ -152,28 +150,34 @@ public class CombatController : MonoBehaviour {
         #region 第三次点击，即攻击
         if (firstClick == 3)
         {
-            if (PathNav.CurrentMovingUnit.CheckAttackable(clickPos))
+            if (PathNav.CurrentMovingUnit.CheckAttackable(clickPos))  //能攻击到该位置
             {
                 Unit targetUnit;
-                if (GridContainer.Instance.UnitDic.TryGetValue(clickPos, out targetUnit)&&targetUnit.Side!= PathNav.CurrentMovingUnit.Side)
+                if (GridContainer.Instance.UnitDic.TryGetValue(clickPos, out targetUnit)
+                    && targetUnit.Side != PathNav.CurrentMovingUnit.Side)//该位置有个敌人单位
                 {
-                    PathNav.CurrentMovingUnit.AttackInitiative(targetUnit);
+                    #region 攻击和被攻击
+                    PathNav.CurrentMovingUnit.AttackInitiative(targetUnit);  //攻击
 
-                    if (PathNav.CurrentMovingUnit.isAlive())
+                    if (PathNav.CurrentMovingUnit.isAlive())  //如果自己还或者
                     {
-                        if (targetUnit.isAlive())
+                        if (targetUnit.isAlive())  //如果敌人还活着，就会被动攻击我
                         {
                             targetUnit.AttackPassive(PathNav.CurrentMovingUnit);
                         }
                         else
                         {
-                            targetUnit.BeDestroyed();
+                            targetUnit.BeDestroyed();   //如果敌人挂了，就被摧毁
                         }
                     }
-                    else
+
+                    if (!PathNav.CurrentMovingUnit.isAlive())  //自己被敌人被动攻击干掉后，就被摧毁
                     {
                         PathNav.CurrentMovingUnit.BeDestroyed();
                     }
+                    #endregion
+
+                    PathNav.CurrentMovingUnit.SetMovedToken();//攻击完了就标记已运动
 
                     firstClick = 1;
                     PathNav.CurrentMovingUnit.StopShowAttackRange();
@@ -186,15 +190,33 @@ public class CombatController : MonoBehaviour {
     {
         firstClick = 3;
         if (PathNav.bMoving)
-            PathNav.CurrentMovingUnit.ShowAttackRange();
+        {
+            if (!PathNav.CurrentMovingUnit.ShowAttackRange())   
+            {
+                firstClick = 1;    //如果该单位没有攻击能力，直接跳过！转入第一次点击状态
+                PathNav.CurrentMovingUnit.SetMovedToken();
+            }
+        }
         else
+        {
             firstClick = 1;
+        }
     }
     /// <summary>
     /// 战斗模式下取消点击的回调函数
     /// </summary>
     public void CancelChooseGridEventHandler()
     {
+        #region 当点击进入攻击态，且玩家不打算攻击时，设置单位的不可移动标志
+        if (PathNav.CurrentMovingUnit != null)
+        {
+            if (firstClick == 3)
+            {
+                PathNav.CurrentMovingUnit.SetMovedToken();
+            }
+        }
+        #endregion
+
         PathNav.StopShowUnitMoveRange();
         PathNav.CurrentMovingUnit.StopShowAttackRange();
         HideBuildingPanel();
@@ -406,6 +428,15 @@ public class CombatController : MonoBehaviour {
     }
     void NextRound()
     {
+        #region 场景各种状态归零
+        if (PathNav.CurrentMovingUnit != null)
+        {
+            PathNav.CurrentMovingUnit.StopShowAttackRange();
+        }
+        firstClick = 1;
+        #endregion
+
+
         p1CashTotal += 1000 * p1CitysCount;
         p2CashTotal += 1000 * p2CitysCount;
 

@@ -5,7 +5,7 @@ using UnityEngine;
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class Airport : TerrainBase
+public class Airport : Building
 {
 
 	void Start ()

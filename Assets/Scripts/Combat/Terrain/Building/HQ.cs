@@ -3,7 +3,7 @@
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class HQ : TerrainBase
+public class HQ : Building
 {
     public static GameObject HQFriendly = null;
     public static GameObject HQEnemy = null;

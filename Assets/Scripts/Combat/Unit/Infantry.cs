@@ -1,15 +1,16 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class Infantry : Unit {
-
+public class Infantry : Unit
+{
     public static int Price = 1000;
 
     void Start () 
     {
-		
+        
 	}
 
     public override void SetEnemy()

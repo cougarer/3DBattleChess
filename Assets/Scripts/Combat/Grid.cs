@@ -104,8 +104,14 @@ public abstract class Grid : MonoBehaviour
     /// </summary>
     public abstract void OnInstatiate();
 
+    /// <summary>
+    /// 设置格子高亮
+    /// </summary>
     public abstract void SetHighLight();
 
+    /// <summary>
+    /// 停止格子高亮
+    /// </summary>
     public abstract void StopHighLight();
 
     protected abstract IEnumerator IHightLight();

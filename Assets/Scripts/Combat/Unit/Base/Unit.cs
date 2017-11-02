@@ -10,6 +10,7 @@ public class Unit : Grid {
     public ArmorType armorType;
     public AttackType attackType;
 
+    public int CaptureCapablility { get { return (int)HP; } }
 
     public List<Point> RangeList
     {
@@ -149,7 +150,8 @@ public class Unit : Grid {
 
         float Height = GridContainer.Instance.TerrainDic[targetPos].transform.position.y + 1;
 
-        #region 上天3
+        #region 单位移动动画
+        #region 上天3个单位
         int loopTimes = 0;
         int maxLoopTimes = 0;
         maxLoopTimes = (int)(0.1f * 3f * 100f);
@@ -188,14 +190,11 @@ public class Unit : Grid {
             yield return new WaitForSeconds(0.01f);
         }
         #endregion
+        #endregion
 
-        transform.position = new Vector3(targetPos.X, Height, targetPos.Z);   //避免误差
-        OnMoveEndMethod();
+        transform.position = new Vector3(targetPos.X, Height, targetPos.Z);   //落地时校准坐标，避免误差
 
-        if (PathNav.bMoving)
-        {
-            SetMovedToken();
-        }
+        OnMoveEndMethod();//移动完毕后的回调函数
 
         yield return 0;
     }
@@ -225,7 +224,10 @@ public class Unit : Grid {
     public void SetMovedToken()
     {
         if (movedToken != null)
-            throw new Exception("移动完毕图标未删除不能加载！");
+        {
+            Debug.Log("移动完毕图标未删除不能加载！");
+            return;
+        }
         movedToken = Instantiate(Resources.Load<GameObject>("Prefabs/Cursor/MovedToken")).transform;
         Vector3 vec3 = transform.position;
         vec3.y += 1.1f;
@@ -330,13 +332,11 @@ public class Unit : Grid {
     protected virtual List<Point> SetAttackRange()
     {
         virtualRange = new List<Point>();
+        virtualRange.Add(new Point(0, 0));
         virtualRange.Add(new Point(0, 1));
         virtualRange.Add(new Point(1, 0));
         virtualRange.Add(new Point(0, -1));
         virtualRange.Add(new Point(-1, 0));
-
-        Debug.Log(gridType);
-
         return virtualRange;
     }
 
@@ -364,10 +364,11 @@ public class Unit : Grid {
     /// </summary>
     public bool ShowAttackRange()
     {
-        if (rangeList.Count == 0) return false;
+        if (RangeList.Count == 0)
+            return false;
         for (int i = 0; i < rangeList.Count; i++)
         {
-            Point p = rangeList[i];
+            Point p = RangeList[i];
             GridContainer.Instance.TerrainDic[p].SetHighLight();
         }
         return true;
@@ -419,7 +420,7 @@ public class Unit : Grid {
     }
 
     /// <summary>
-    /// 龙卷风摧毁停车场
+    /// 龙卷风摧毁停车场（被摧毁）
     /// </summary>
     public void BeDestroyed()
     {

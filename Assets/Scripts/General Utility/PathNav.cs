@@ -26,6 +26,9 @@ public static class PathNav
             return ReachablePointSet;
         }
     }
+    /// <summary>
+    /// 给单位移动动画协程设置的一个信号量，用于进入下一回合时跳过单位移动动画
+    /// </summary>
     public static bool bMoving = false;
 
     //辅助停止单位高亮
