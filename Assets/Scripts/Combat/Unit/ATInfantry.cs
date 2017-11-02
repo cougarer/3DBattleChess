@@ -3,7 +3,7 @@
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class ATInfantry : Unit {
+public class ATInfantry : CaptureUnit {
 
     public static int Price = 3000;
 

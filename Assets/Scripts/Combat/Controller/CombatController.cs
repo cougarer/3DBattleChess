@@ -41,7 +41,6 @@ public class CombatController : MonoBehaviour {
     {
         FindUI();
 
-
         GridContainer.isEditorMode = false;   //开启战斗模式
 
         MapLoader.LoadCustomLevel("Test");
@@ -150,7 +149,28 @@ public class CombatController : MonoBehaviour {
         #region 第三次点击，即攻击
         if (firstClick == 3)
         {
-            if (PathNav.CurrentMovingUnit.CheckAttackable(clickPos))  //能攻击到该位置
+            if (clickPos == PathNav.CurrentMovingUnit.gridID)   //玩家点击的是脚底下
+            {
+                TerrainBase tb = GridContainer.Instance.TerrainDic[clickPos]; 
+                if (tb.Side != PathNav.CurrentMovingUnit.Side)   //建筑跟自己是不同阵营的，才可以占领
+                {
+                    if (tb is Building&&PathNav.CurrentMovingUnit is CaptureUnit)   //点击的是建筑的子类，即可以占领
+                    {
+                        Building b = (Building)tb;
+                        CaptureUnit cu = (CaptureUnit)PathNav.CurrentMovingUnit;
+
+                        Debug.Log("占领");
+
+                        b.BeCapture(cu);
+                    }
+                }
+
+                PathNav.CurrentMovingUnit.SetMovedToken();//攻击完了就标记已运动
+
+                firstClick = 1;
+                PathNav.CurrentMovingUnit.StopShowAttackRange();
+            }
+            else if (PathNav.CurrentMovingUnit.CheckAttackable(clickPos))  //能攻击到该位置
             {
                 Unit targetUnit;
                 if (GridContainer.Instance.UnitDic.TryGetValue(clickPos, out targetUnit)

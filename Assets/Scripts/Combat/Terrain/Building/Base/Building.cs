@@ -2,40 +2,61 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+[System.Serializable]
 public class Building : TerrainBase
 {
-    public int CapturePoint
-    {
-        get { return capturePoint; }
-    }
-    [SerializeField]protected int capturePoint;
+    private int oldCapturePoint;
 
-    public GridType CurrentCapturingUnit
+    public int capturePoint;
+
+    public Unit CurrentCapturingUnit
     {
         get { return currentCapturingUnit; }
     }
-    private GridType currentCapturingUnit;
+    private Unit currentCapturingUnit;
 
 	void Start ()
     {
-		
+        oldCapturePoint = capturePoint;    //记录原有的占领点数
+        Debug.Log(oldCapturePoint);
 	}
 
-    public bool BeCapture(int captureCapability)
+    public void BeCapture(CaptureUnit captureUnit)
     {
-        capturePoint -= captureCapability;
-        return capturePoint < 0 ? true : false;
-    }
+        if (currentCapturingUnit != captureUnit)   //如果来占领的人换了，就得重新占领
+        {
+            currentCapturingUnit = captureUnit;
+            capturePoint = oldCapturePoint;
+        }
 
-    public override void SetEnemy()
-    {
-        capturePoint = 20;
-        base.SetEnemy();
-    }
+        currentCapturingUnit = captureUnit;
 
-    public override void SetFriendly()
+        Debug.Log(capturePoint);
+
+        capturePoint -= captureUnit.CaptureCapablility;
+
+        Debug.Log(captureUnit.CaptureCapablility);
+
+        if (capturePoint <= 0)  //被占领了
+        {
+            capturePoint = oldCapturePoint;
+            switch (captureUnit.Side)
+            {
+                case SideType.Enemy:
+                    {
+                        SetFriendly();
+                    }
+                    break;
+                case SideType.Friendly:
+                    {
+                        SetEnemy();
+                    }
+                    break;
+            }
+        }
+    }
+    public void ResetCapturePoint()
     {
-        capturePoint = 20;
-        base.SetFriendly();
+        capturePoint = oldCapturePoint;
     }
 }

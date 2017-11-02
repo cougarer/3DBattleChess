@@ -9,7 +9,6 @@ public class Shipyard : Building
 {
 	void Start ()
     {
-        
     }
 
     public override void SetEnemy()

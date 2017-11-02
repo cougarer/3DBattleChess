@@ -10,8 +10,6 @@ public class Unit : Grid {
     public ArmorType armorType;
     public AttackType attackType;
 
-    public int CaptureCapablility { get { return (int)HP; } }
-
     public List<Point> RangeList
     {
         get

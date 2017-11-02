@@ -10,7 +10,7 @@ public class Airport : Building
 
 	void Start ()
     {
-        
+        Debug.Log(capturePoint);
     }
 
     public override void SetEnemy()
