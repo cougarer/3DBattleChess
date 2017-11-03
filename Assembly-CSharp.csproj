@@ -6,7 +6,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{6C9BDB1C-B9C0-3603-47BB-855F42889D3A}</ProjectGuid>
+    <ProjectGuid>{F3454E8F-EF29-D38B-14AC-5845E56966F6}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -50,8 +50,10 @@
      <Compile Include="Assets\Scripts\Combat\Controller\CombatController.cs" />
      <Compile Include="Assets\Scripts\Combat\Controller\GridContainer.cs" />
      <Compile Include="Assets\Scripts\Combat\Grid.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Base\Landform.cs" />
      <Compile Include="Assets\Scripts\Combat\Terrain\Base\TerrainBase.cs" />
      <Compile Include="Assets\Scripts\Combat\Terrain\Building\Airport.cs" />
+     <Compile Include="Assets\Scripts\Combat\Terrain\Building\Base\Building.cs" />
      <Compile Include="Assets\Scripts\Combat\Terrain\Building\City.cs" />
      <Compile Include="Assets\Scripts\Combat\Terrain\Building\Factory.cs" />
      <Compile Include="Assets\Scripts\Combat\Terrain\Building\HQ.cs" />
@@ -67,7 +69,11 @@
      <Compile Include="Assets\Scripts\Combat\Unit\ATAirMissile.cs" />
      <Compile Include="Assets\Scripts\Combat\Unit\ATInfantry.cs" />
      <Compile Include="Assets\Scripts\Combat\Unit\Artillery.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Base\Men.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Base\Plane.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Base\Ship.cs" />
      <Compile Include="Assets\Scripts\Combat\Unit\Base\Unit.cs" />
+     <Compile Include="Assets\Scripts\Combat\Unit\Base\Vehicle.cs" />
      <Compile Include="Assets\Scripts\Combat\Unit\BattleShip.cs" />
      <Compile Include="Assets\Scripts\Combat\Unit\Bomber.cs" />
      <Compile Include="Assets\Scripts\Combat\Unit\CannonTank.cs" />

@@ -137,7 +137,7 @@ public class GridContainer : Singletion<GridContainer> {
     /// <param name="pos"></param>
     /// <param name="type"></param>
     /// <param name="sideType"></param>
-    public void AddUnit(Point pos, GridType type, SideType sideType)
+    public Unit AddUnit(Point pos, GridType type, SideType sideType)
     {
         #region Type Switch
         switch (type)
@@ -216,6 +216,15 @@ public class GridContainer : Singletion<GridContainer> {
         }
         #endregion
         u.OnInstatiate();
+
+        return u;
+    }
+
+    public void AddUnit(Unit u)
+    {
+        Unit newUnit=AddUnit(u.gridID, u.gridType, u.Side);
+
+        newUnit.HP = u.HP;
     }
 
     /// <summary>

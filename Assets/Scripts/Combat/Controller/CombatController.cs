@@ -162,13 +162,13 @@ public class CombatController : MonoBehaviour {
                         Debug.Log("尝试占领");
 
                         b.BeCapture(cu);
+
+                        PathNav.CurrentMovingUnit.SetMovedToken();//攻击完了就标记已运动
+
+                        firstClick = 1;
+                        PathNav.CurrentMovingUnit.StopShowAttackRange();
                     }
                 }
-
-                PathNav.CurrentMovingUnit.SetMovedToken();//攻击完了就标记已运动
-
-                firstClick = 1;
-                PathNav.CurrentMovingUnit.StopShowAttackRange();
             }
             else if (PathNav.CurrentMovingUnit.CheckAttackable(clickPos))  //能攻击到该位置
             {
@@ -202,6 +202,12 @@ public class CombatController : MonoBehaviour {
                     firstClick = 1;
                     PathNav.CurrentMovingUnit.StopShowAttackRange();
                 }
+            }
+            else if (PathNav.CurrentMovingUnit.Side ==
+                GridContainer.Instance.UnitDic[clickPos].Side
+                || GridContainer.Instance.UnitDic[clickPos] is ITransport)       //上车，运输
+            {
+                Debug.Log("asd");
             }
         }
         #endregion

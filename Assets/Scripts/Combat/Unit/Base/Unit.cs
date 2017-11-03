@@ -5,8 +5,14 @@ using UnityEngine;
 
 //Author: MaxLykoS
 //UpdateTime: 2017/10/28
+public interface ITransport
+{
+    Unit PayLoad { set; get; }
+    void Load(Unit u,Point pos);
+    bool UnLoad(Point pos);
 
-public class Unit : Grid {
+}
+public abstract class Unit : Grid {
     public ArmorType armorType;
     public AttackType attackType;
 
@@ -77,6 +83,8 @@ public class Unit : Grid {
     {
 
     }
+
+    public abstract bool CheckCouldMoveTo(TerrainBase tb);
 
     #region 移动
     private Transform movedToken = null;
