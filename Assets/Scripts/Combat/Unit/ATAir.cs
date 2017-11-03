@@ -3,7 +3,8 @@
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class ATAir : Unit {
+public class ATAir : Vehicle
+{
 
     public static int Price = 6000;
 

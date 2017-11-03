@@ -102,7 +102,7 @@ public class CombatController : MonoBehaviour {
                 }
                 #endregion
             }
-            else if (tb.IsBuilding()
+            else if (tb is Building
                 &&tb.gridType!=GridType.HQ
                 &&tb.gridType!=GridType.City)             //玩家点击的是建筑且不能是HQ也不能是City
             {
@@ -122,9 +122,9 @@ public class CombatController : MonoBehaviour {
                 }
                 #endregion
             }
-            else if(tb.IsTerrain())   //玩家点击的是地形
+            else if(tb is Landform)   //玩家点击的是地形
             {
-                Debug.Log("asd");
+                
             }
 
             return;
@@ -154,10 +154,10 @@ public class CombatController : MonoBehaviour {
                 TerrainBase tb = GridContainer.Instance.TerrainDic[clickPos]; 
                 if (tb.Side != PathNav.CurrentMovingUnit.Side)   //建筑跟自己是不同阵营的，才可以占领
                 {
-                    if (tb is Building&&PathNav.CurrentMovingUnit is CaptureUnit)   //点击的是建筑的子类，即可以占领
+                    if (tb is Building&&PathNav.CurrentMovingUnit is Men)//点击的是建筑的子类，即可以占领,同时当前点击的单位可以占领
                     {
                         Building b = (Building)tb;
-                        CaptureUnit cu = (CaptureUnit)PathNav.CurrentMovingUnit;
+                        Men cu = (Men)PathNav.CurrentMovingUnit;
 
                         Debug.Log("尝试占领");
 

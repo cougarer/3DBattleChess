@@ -4,7 +4,7 @@ using UnityEngine;
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class Infantry : CaptureUnit
+public class Infantry : Men
 {
     public static int Price = 1000;
 

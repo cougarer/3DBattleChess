@@ -6,7 +6,7 @@ using UnityEngine;
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class Woods : TerrainBase
+public class Woods : Landform
 {
 
     void Start ()

@@ -3,7 +3,8 @@
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class Chopter : Unit {
+public class Chopter : Plane
+{
 
     public static int Price = 9000;
 

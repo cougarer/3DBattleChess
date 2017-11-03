@@ -556,7 +556,7 @@ public class EditorController : MonoBehaviour
                 return;
             //是地形，同型，退出
 
-            if (tb.IsBuilding()
+            if (tb is Building
                 && CurrentClickGridType == tb.gridType
                 && CurrentClickSideType == tb.Side)
                 return;

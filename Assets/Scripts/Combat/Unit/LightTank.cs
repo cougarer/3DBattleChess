@@ -3,7 +3,7 @@
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class LightTank : Unit
+public class LightTank : Vehicle
 {
     public static int Price = 7000;
 

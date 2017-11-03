@@ -3,7 +3,8 @@
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class Rockets : Unit {
+public class Rockets : Vehicle
+{
 
     public static int Price = 18000;
 

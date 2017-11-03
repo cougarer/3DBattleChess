@@ -208,21 +208,21 @@ public class Node
             {
                 return 999;
             }
-            else if (startUnit.isInfantry()
+            else if (startUnit is Men
             && (terrainType == GridType.Sea || terrainType == GridType.Reef))
             {
                 return 999;
             }
-            else if (startUnit.isPlane())
+            else if (startUnit is Plane)
             {
                 return 2;
             }
-            else if (startUnit.isShip()
+            else if (startUnit is Ship
                 && terrainType != GridType.Sea)
             {
                 return 999;
             }
-            else if (startUnit.isVehicle()
+            else if (startUnit is Vehicle
                 && (terrainType == GridType.Mountain || terrainType == GridType.Sea || terrainType == GridType.Reef))
             {
                 return 999;

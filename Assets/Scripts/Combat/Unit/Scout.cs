@@ -4,7 +4,8 @@ using UnityEngine;
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class Scout : Unit {
+public class Scout : Vehicle
+{
 
     public static int Price = 4000;
 

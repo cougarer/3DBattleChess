@@ -3,7 +3,7 @@
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class Artillery : Unit 
+public class Artillery : Vehicle
 {
     public static int Price = 6000;
 

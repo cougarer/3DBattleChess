@@ -2,13 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class CaptureUnit : Unit {
+public class Men : Unit {
 
     public int CaptureCapablility { get { return (int)HP; } }
-
-    void Start ()
-    {
-		
-	}
 	
 }

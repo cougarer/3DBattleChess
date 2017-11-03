@@ -3,7 +3,8 @@
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class Bomber : Unit {
+public class Bomber : Plane
+{
 
     public static int Price = 20000;
 

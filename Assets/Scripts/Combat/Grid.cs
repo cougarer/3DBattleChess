@@ -18,28 +18,10 @@ public abstract class Grid : MonoBehaviour
     /// <returns></returns>
     public bool IsTerrain()
     {
-        if (this is TerrainBase) {Debug.Log("asd"); return true; }
-        else return false;
-    }
-
-    /// <summary>
-    /// 判断是否为建筑类型，注意，建筑也属于地形
-    /// </summary>
-    /// <returns></returns>
-    public bool IsBuilding()
-    {
-        if (gridType >= GridType.HQ && gridType <= GridType.Shipyard) return true;
-        else return false;
-    }
-
-    /// <summary>
-    /// 判断是否为单位类型
-    /// </summary>
-    /// <returns></returns>
-    public bool IsUnit()
-    {
-        if (gridType >= GridType.Artillery && gridType <= GridType.Transporter) return true;
-        else return false;
+        if (this is TerrainBase)
+            return true; 
+        else
+            return false;
     }
 
     /// <summary>
@@ -55,7 +37,7 @@ public abstract class Grid : MonoBehaviour
     /// </summary>
     public virtual void SetFriendly()
     {
-        if (gridType >= GridType.Plain && gridType <= GridType.Woods)
+        if (this is Landform)
             throw new System.Exception("地形不能设为非中立！");
 
         Side = SideType.Friendly;
@@ -66,7 +48,7 @@ public abstract class Grid : MonoBehaviour
     /// </summary>
     public virtual void SetEnemy()
     {
-        if (gridType >= GridType.Plain && gridType <= GridType.Woods)
+        if (this is Landform)
             throw new System.Exception("地形不能设为非中立！");
 
         Side = SideType.Enemy;
@@ -81,9 +63,11 @@ public abstract class Grid : MonoBehaviour
         switch (newSide)
         {
             case SideType.Enemy:
-                SetEnemy(); break;
+                SetEnemy();
+                break;
             case SideType.Friendly:
-                SetFriendly(); break;
+                SetFriendly();
+                break;
             case SideType.Neutral:
                 SetNeutral();
                 break;

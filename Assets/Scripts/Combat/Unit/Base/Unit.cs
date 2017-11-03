@@ -34,21 +34,8 @@ public class Unit : Grid {
     }
     protected bool isMoveable = true;
 
-    void Start()
-    {
-
-    }
-
     #region 设置阵营
     //设置阵营，编辑模式下启用
-    public override void SetEnemy()
-    {
-        base.SetEnemy();
-    }
-    public override void SetFriendly()
-    {
-        base.SetFriendly();
-    }
     public override void SetNeutral()
     {
         throw new System.Exception("Unit grid can not be Neutral!");
@@ -90,43 +77,6 @@ public class Unit : Grid {
     {
 
     }
-
-    #region 判断类型
-    public bool isInfantry()
-    {
-        if (gridType == GridType.Infantry || gridType == GridType.ATInfantry)
-            return true;
-        return false;
-    }
-    public bool isVehicle()
-    {
-        if ((gridType >= GridType.Artillery && gridType <= GridType.ATAirMissile)
-            || gridType == GridType.CannonTank
-            || gridType == GridType.HeavyTank
-            || (gridType >= GridType.LightTank && gridType <= GridType.Scout)
-            || gridType == GridType.Transporter)
-            return true;
-        return false;
-    }
-    public bool isShip()
-    {
-        if (gridType == GridType.BattleShip
-            || gridType == GridType.Destroyer
-            || gridType == GridType.LandingShip
-            || gridType == GridType.Submarine)
-            return true;
-        return false;
-    }
-    public bool isPlane()
-    {
-        if (gridType == GridType.Bomber
-            || gridType == GridType.Chopter
-            || gridType == GridType.Fighter
-            || gridType == GridType.TransportChopter)
-            return true;
-        return false;
-    }
-    #endregion
 
     #region 移动
     private Transform movedToken = null;

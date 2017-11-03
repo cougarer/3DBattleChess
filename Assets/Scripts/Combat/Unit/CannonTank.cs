@@ -3,7 +3,8 @@
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class CannonTank : Unit {
+public class CannonTank : Vehicle
+{
 
     public static int Price = 21000;
 

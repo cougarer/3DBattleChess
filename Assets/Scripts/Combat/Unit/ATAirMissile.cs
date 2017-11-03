@@ -3,7 +3,8 @@
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class ATAirMissile : Unit {
+public class ATAirMissile : Vehicle
+{
 
     public static int Price = 15000;
 

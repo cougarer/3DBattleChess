@@ -4,7 +4,7 @@ using UnityEngine;
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class Transporter : Unit {
+public class Transporter : Vehicle {
 
     public static int Price = 5000;
 

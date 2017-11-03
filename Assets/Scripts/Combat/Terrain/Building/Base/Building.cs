@@ -20,13 +20,12 @@ public class Building : TerrainBase
         Debug.Log(oldCapturePoint);
 	}
 
-    public void BeCapture(CaptureUnit captureUnit)
+    public void BeCapture(Men captureUnit)
     {
         if (currentCapturingUnit != captureUnit)   //如果来占领的人换了，就得重新占领
         {
             currentCapturingUnit = captureUnit;
             capturePoint = oldCapturePoint;
-            Debug.Log(oldCapturePoint);
         }
 
         currentCapturingUnit = captureUnit;

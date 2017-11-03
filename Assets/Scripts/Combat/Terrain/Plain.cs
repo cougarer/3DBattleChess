@@ -8,7 +8,7 @@ using UnityEngine.UI;
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class Plain : TerrainBase
+public class Plain : Landform
 {
 
     void Start ()

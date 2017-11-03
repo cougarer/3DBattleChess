@@ -3,7 +3,8 @@
 //Author: MaxLykoS
 //UpdateTime: 2017/10/21
 
-public class BattleShip : Unit {
+public class BattleShip : Ship
+{
 
     public static int Price = 25000;
 
