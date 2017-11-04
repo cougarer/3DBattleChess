@@ -12,6 +12,8 @@ public static class PathNav
     {
         get
         {
+            if (startPos == null)
+                return null;
             return GridContainer.Instance.UnitDic[startPos];
         }
         set
@@ -32,7 +34,7 @@ public static class PathNav
     public static bool bMoving = false;
 
     //辅助停止单位高亮
-    private static Point startPos;
+    private static Point startPos=null;
 
     private static HashSet<Node> ReachableNodeSet = new HashSet<Node>();
     private static List<Node> UnknownList = new List<Node>();
