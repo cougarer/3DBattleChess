@@ -208,12 +208,14 @@ public class CombatController : MonoBehaviour {
                 && GridContainer.Instance.UnitDic[clickPos] is ITransport)    //上车
                 {
                     ITransport carrier = (ITransport)GridContainer.Instance.UnitDic[clickPos];
-                    carrier.Load(PathNav.CurrentMovingUnit);
 
-                    Debug.Log(carrier.PayLoad == null ? "payload为空" : "payload不为空");
+                    if (carrier.Load(PathNav.CurrentMovingUnit))
+                    {
+                        Debug.Log(carrier.PayLoad == null ? "payload为空" : "payload不为空");
 
-                    firstClick = 1;
-                    return;
+                        firstClick = 1;
+                        return;
+                    }
                 }
             }
             else if (PathNav.CurrentMovingUnit is ITransport)   //卸载
@@ -264,6 +266,8 @@ public class CombatController : MonoBehaviour {
     /// </summary>
     public void CancelChooseGridEventHandler()
     {
+        if (firstClick==0) return;   //屏蔽一切操作
+
         #region 当点击进入攻击态，且玩家不打算攻击时，设置单位的不可移动标志
         if (PathNav.CurrentMovingUnit != null)
         {

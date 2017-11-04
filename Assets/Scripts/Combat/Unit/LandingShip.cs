@@ -30,7 +30,7 @@ public class LandingShip : Ship,ITransport
         set;
     }
 
-    public void Load(Unit u)
+    public bool Load(Unit u)
     {
         if (u is Men||u is Vehicle)
         {
@@ -42,7 +42,10 @@ public class LandingShip : Ship,ITransport
             GridContainer.Instance.UnitDic.Remove(u.gridID);
             u.gridID = null;
             Destroy(u.gameObject);
+
+            return true;
         }
+        return false;
     }
 
     public bool UnLoad(Point pos)

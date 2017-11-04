@@ -38,10 +38,11 @@ public class Transporter : Vehicle, ITransport
         set;
     }
 
-    public void Load(Unit u)
+    public bool Load(Unit u)
     {
         if (u is Men)
         {
+            Debug.Log(u.gridType + "可以上车！");
             PayLoad = u;
 
             u.StopHighLight();
@@ -51,7 +52,12 @@ public class Transporter : Vehicle, ITransport
             u.gridID = null;
             Destroy(u.gameObject);
 
-
+            return true;
+        }
+        else
+        {
+            Debug.Log(u.gridType+"上不了车！");
+            return false;
         }
     }
 
