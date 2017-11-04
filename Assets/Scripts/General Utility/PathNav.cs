@@ -12,6 +12,8 @@ public static class PathNav
     {
         get
         {
+            if (startPos == null)
+                return null;
             return GridContainer.Instance.UnitDic[startPos];
         }
         set

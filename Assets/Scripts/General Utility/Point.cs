@@ -21,6 +21,9 @@ public class Point
 
     public static bool operator ==(Point p1, Point p2)
     {
+        if ((p1 as object) == null) return ((p2 as object) == null);
+        if ((p2 as object) == null) return ((p1 as object) == null);
+
         if (p1.X == p2.X && p1.Z == p2.Z) return true;
         else return false;
     }

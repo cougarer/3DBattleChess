@@ -149,8 +149,6 @@ public class CameraController : MonoBehaviour {
                 else                              //Combat Mode
                 {
                     combatController.ClickChooseGridEventHandler(currentClickPos);
-
-                    clicked = true;
                 }
             }
         }
@@ -182,11 +180,10 @@ public class CameraController : MonoBehaviour {
     /// </summary>
     public void CancelClickEvent()
     {
-        if (!GridContainer.isEditorMode & clicked)
+        if (!GridContainer.isEditorMode)
         {
             if (Input.GetMouseButton(1))
             {
-                clicked = false;
                 currentClickPos = null;
 
                 combatController.CancelChooseGridEventHandler();

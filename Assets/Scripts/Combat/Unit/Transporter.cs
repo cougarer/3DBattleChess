@@ -42,8 +42,9 @@ public class Transporter : Vehicle, ITransport
     {
         if (u is Men)
         {
-            Debug.Log(u.gridType + "可以上车！");
             PayLoad = u;
+
+            Debug.Log(u.gridType);
 
             u.StopHighLight();
             u.StopShowAttackRange();

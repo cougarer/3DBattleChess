@@ -65,6 +65,7 @@ public class CombatController : MonoBehaviour {
     /// <param name="clickPos"></param>
     public void ClickChooseGridEventHandler(Point clickPos)
     {
+        couldCancel = true;
 
         #region 显示点击格子的详细资料
         ShowGridDetailPanel(clickPos);
@@ -203,11 +204,12 @@ public class CombatController : MonoBehaviour {
                     PathNav.CurrentMovingUnit.StopShowAttackRange();
                     return;
                 }
-                else if (PathNav.CurrentMovingUnit.Side ==
+                else if (GridContainer.Instance.UnitDic.TryGetValue(clickPos, out targetUnit)
+                    && PathNav.CurrentMovingUnit.Side ==
                 GridContainer.Instance.UnitDic[clickPos].Side
                 && GridContainer.Instance.UnitDic[clickPos] is ITransport)    //上车
                 {
-                    ITransport carrier = (ITransport)GridContainer.Instance.UnitDic[clickPos];
+                    ITransport carrier = (ITransport)targetUnit;
 
                     if (carrier.Load(PathNav.CurrentMovingUnit))
                     {
@@ -248,7 +250,10 @@ public class CombatController : MonoBehaviour {
                         firstClick = 3;   //这个单位里装着payload，进入第三次点击状态，准备卸载
                         return;
                     }
-                    else Debug.Log("该运输载具内无货物");
+                    else
+                    {
+                        Debug.Log(it.PayLoad);
+                    }
                 }
 
                 PathNav.CurrentMovingUnit.SetMovedToken();
@@ -261,28 +266,35 @@ public class CombatController : MonoBehaviour {
             firstClick = 1;
         }
     }
+
+    private bool couldCancel = false;
     /// <summary>
     /// 战斗模式下取消点击的回调函数
     /// </summary>
     public void CancelChooseGridEventHandler()
     {
-        if (firstClick==0) return;   //屏蔽一切操作
-
-        #region 当点击进入攻击态，且玩家不打算攻击时，设置单位的不可移动标志
-        if (PathNav.CurrentMovingUnit != null)
+        if (couldCancel)
         {
-            if (firstClick == 3)
-            {
-                PathNav.CurrentMovingUnit.SetMovedToken();
-            }
-        }
-        #endregion
+            if (firstClick == 0) return;   //屏蔽一切操作
 
-        PathNav.StopShowUnitMoveRange();
-        if(PathNav.CurrentMovingUnit!=null)
-            PathNav.CurrentMovingUnit.StopShowAttackRange();
-        HideBuildingPanel();
-        firstClick = 1;
+            #region 当点击进入攻击态，且玩家不打算攻击时，设置单位的不可移动标志
+            if (PathNav.CurrentMovingUnit != null)
+            {
+                if (firstClick == 3)
+                {
+                    PathNav.CurrentMovingUnit.SetMovedToken();
+                }
+            }
+            #endregion
+
+            PathNav.StopShowUnitMoveRange();
+            if (PathNav.CurrentMovingUnit != null)
+                PathNav.CurrentMovingUnit.StopShowAttackRange();
+            HideBuildingPanel();
+            firstClick = 1;
+
+            couldCancel = false;
+        }
     }
 
     /// <summary>
