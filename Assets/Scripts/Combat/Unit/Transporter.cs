@@ -38,14 +38,20 @@ public class Transporter : Vehicle, ITransport
         set;
     }
 
-    public void Load(Unit u, Point pos)
+    public void Load(Unit u)
     {
         if (u is Men)
         {
             PayLoad = u;
-            GridContainer.Instance.UnitDic.Remove(pos);
+
+            u.StopHighLight();
+            u.StopShowAttackRange();
+
+            GridContainer.Instance.UnitDic.Remove(u.gridID);
             u.gridID = null;
             Destroy(u.gameObject);
+
+
         }
     }
 

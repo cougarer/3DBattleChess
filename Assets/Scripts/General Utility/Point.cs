@@ -30,6 +30,11 @@ public class Point
         else return false;
     }
 
+    public static int operator -(Point p1, Point p2)
+    {
+        return Math.Abs(p1.X - p2.X + p1.Z - p2.Z);
+    }
+
     public Point Left()
     {
         return new Point(X, Z + 1);

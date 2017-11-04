@@ -201,13 +201,32 @@ public class CombatController : MonoBehaviour {
 
                     firstClick = 1;
                     PathNav.CurrentMovingUnit.StopShowAttackRange();
+                    return;
+                }
+                else if (PathNav.CurrentMovingUnit.Side ==
+                GridContainer.Instance.UnitDic[clickPos].Side
+                && GridContainer.Instance.UnitDic[clickPos] is ITransport)    //上车
+                {
+                    ITransport carrier = (ITransport)GridContainer.Instance.UnitDic[clickPos];
+                    carrier.Load(PathNav.CurrentMovingUnit);
+
+                    Debug.Log(carrier.PayLoad == null ? "payload为空" : "payload不为空");
+
+                    firstClick = 1;
+                    return;
                 }
             }
-            else if (PathNav.CurrentMovingUnit.Side ==
-                GridContainer.Instance.UnitDic[clickPos].Side
-                || GridContainer.Instance.UnitDic[clickPos] is ITransport)       //上车，运输
+            else if (PathNav.CurrentMovingUnit is ITransport)   //卸载
             {
-                Debug.Log("asd");
+                if (PathNav.CurrentMovingUnit.gridID - clickPos == 1) //距离相差为1
+                {
+                    //Check Landable
+                    ITransport it = (ITransport)PathNav.CurrentMovingUnit.gridID;
+                    if (it.PayLoad.CheckCouldMoveTo(GridContainer.Instance.TerrainDic[clickPos]))//如果该地点可以下车
+                    {
+                        it.UnLoad(clickPos);
+                    }
+                }
             }
         }
         #endregion
@@ -219,8 +238,20 @@ public class CombatController : MonoBehaviour {
         {
             if (!PathNav.CurrentMovingUnit.ShowAttackRange())   
             {
-                firstClick = 1;    //如果该单位没有攻击能力，直接跳过！转入第一次点击状态
+                if (PathNav.CurrentMovingUnit is ITransport)   //正在走的这个单位实现了运输接口
+                {
+                    ITransport it = (ITransport)PathNav.CurrentMovingUnit;
+                    if (it.PayLoad != null)
+                    {
+                        firstClick = 3;   //这个单位里装着payload，进入第三次点击状态，准备卸载
+                        return;
+                    }
+                    else Debug.Log("该运输载具内无货物");
+                }
+
                 PathNav.CurrentMovingUnit.SetMovedToken();
+
+                firstClick = 1;    //如果该单位没有攻击能力，直接跳过！转入第一次点击状态
             }
         }
         else
@@ -244,7 +275,8 @@ public class CombatController : MonoBehaviour {
         #endregion
 
         PathNav.StopShowUnitMoveRange();
-        PathNav.CurrentMovingUnit.StopShowAttackRange();
+        if(PathNav.CurrentMovingUnit!=null)
+            PathNav.CurrentMovingUnit.StopShowAttackRange();
         HideBuildingPanel();
         firstClick = 1;
     }

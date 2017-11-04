@@ -8,7 +8,7 @@ using UnityEngine;
 public interface ITransport
 {
     Unit PayLoad { set; get; }
-    void Load(Unit u,Point pos);
+    void Load(Unit u);
     bool UnLoad(Point pos);
 
 }
