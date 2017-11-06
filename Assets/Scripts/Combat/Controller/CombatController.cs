@@ -5,7 +5,7 @@ using UnityEngine.UI;
 using System;
 
 //Author: MaxLykoS
-//UpdateTime: 2017/10/28
+//UpdateTime: 2017/11/6
 
 public class CombatController : MonoBehaviour {
     public static int p1CashTotal = 3000;
@@ -39,6 +39,8 @@ public class CombatController : MonoBehaviour {
     }
     void Start ()
     {
+        Init();
+
         FindUI();
 
         GridContainer.isEditorMode = false;   //开启战斗模式
@@ -58,6 +60,11 @@ public class CombatController : MonoBehaviour {
         textP1CashTotal = GameObject.Find("Canvas/Player1/CashTotalText").GetComponent<Text>();
         textP2CashTotal = GameObject.Find("Canvas/Player2/CashTotalText").GetComponent<Text>();
     }
+    private void Init()
+    {
+        PayloadLandRange = new List<TerrainBase>();
+    }
+
 
     /// <summary>
     /// 战斗模式下点击格子后的回调函数
@@ -147,9 +154,10 @@ public class CombatController : MonoBehaviour {
         }
         #endregion
 
-        #region 第三次点击，即攻击
+        #region 第三次点击，即攻击,或上车下车
         if (firstClick == 3)
         {
+            #region 占领
             if (clickPos == PathNav.CurrentMovingUnit.gridID)   //玩家点击的是脚底下
             {
                 TerrainBase tb = GridContainer.Instance.TerrainDic[clickPos]; 
@@ -171,9 +179,11 @@ public class CombatController : MonoBehaviour {
                     }
                 }
             }
+            #endregion
             else if (PathNav.CurrentMovingUnit.CheckAttackable(clickPos))  //能攻击到该位置
             {
                 Unit targetUnit;
+                #region 攻击
                 if (GridContainer.Instance.UnitDic.TryGetValue(clickPos, out targetUnit)
                     && targetUnit.Side != PathNav.CurrentMovingUnit.Side)//该位置有个敌人单位
                 {
@@ -204,6 +214,8 @@ public class CombatController : MonoBehaviour {
                     PathNav.CurrentMovingUnit.StopShowAttackRange();
                     return;
                 }
+                #endregion
+                #region 上车
                 else if (GridContainer.Instance.UnitDic.TryGetValue(clickPos, out targetUnit)
                     && PathNav.CurrentMovingUnit.Side ==
                 GridContainer.Instance.UnitDic[clickPos].Side
@@ -213,28 +225,40 @@ public class CombatController : MonoBehaviour {
 
                     if (carrier.Load(PathNav.CurrentMovingUnit))
                     {
-                        Debug.Log(carrier.PayLoad == null ? "payload为空" : "payload不为空");
+                        firstClick = 1;
+                        return;
+                    }
+                }
+                #endregion
+            }
+            #region 下车
+            else if (PathNav.CurrentMovingUnit is ITransport)   //卸载
+            {
+                
+                if (PathNav.CurrentMovingUnit.gridID - clickPos == 1) //距离相差为1
+                {
+                    //Check Landable
+                    ITransport it = (ITransport)PathNav.CurrentMovingUnit;
+                    if (it.PayLoad.CheckCouldMoveTo(GridContainer.Instance.TerrainDic[clickPos]))//如果该地点可以下车
+                    {
+                        it.UnLoad(clickPos);
+                        foreach (TerrainBase tb in PayloadLandRange)
+                            tb.StopHighLight();
+                        PayloadLandRange.Clear();
 
                         firstClick = 1;
                         return;
                     }
                 }
             }
-            else if (PathNav.CurrentMovingUnit is ITransport)   //卸载
-            {
-                if (PathNav.CurrentMovingUnit.gridID - clickPos == 1) //距离相差为1
-                {
-                    //Check Landable
-                    ITransport it = (ITransport)PathNav.CurrentMovingUnit.gridID;
-                    if (it.PayLoad.CheckCouldMoveTo(GridContainer.Instance.TerrainDic[clickPos]))//如果该地点可以下车
-                    {
-                        it.UnLoad(clickPos);
-                    }
-                }
-            }
+            #endregion
         }
         #endregion
     }
+    /// <summary>
+    /// 货物卸载范围
+    /// </summary>
+    private List<TerrainBase> PayloadLandRange;
     void OnMoveEnd()
     {
         firstClick = 3;
@@ -247,12 +271,25 @@ public class CombatController : MonoBehaviour {
                     ITransport it = (ITransport)PathNav.CurrentMovingUnit;
                     if (it.PayLoad != null)
                     {
+                        #region 求下车范围
+                        Point[] p4 = { new Point(1, 0), new Point(0, 1), new Point(-1, 0), new Point(0, -1) };
+                        TerrainBase tb;
+                        Point id = PathNav.CurrentMovingUnit.gridID;
+                        foreach (Point p in p4)
+                        {
+                            if (GridContainer.Instance.TerrainDic.TryGetValue(new Point(p.X + id.X, p.Z + id.Z), out tb))  //得到卸货范围
+                            {
+                                if (it.PayLoad.CheckCouldMoveTo(tb))
+                                {
+                                    PayloadLandRange.Add(tb);
+                                    tb.SetHighLight();
+                                }
+                            }
+                        }
+                        #endregion
+
                         firstClick = 3;   //这个单位里装着payload，进入第三次点击状态，准备卸载
                         return;
-                    }
-                    else
-                    {
-                        Debug.Log(it.PayLoad);
                     }
                 }
 
@@ -288,6 +325,13 @@ public class CombatController : MonoBehaviour {
             #endregion
 
             PathNav.StopShowUnitMoveRange();
+            if (PayloadLandRange.Count != 0)   //卸货范围修改
+            {
+                foreach (TerrainBase tb in PayloadLandRange)
+                    tb.StopHighLight();
+                PayloadLandRange.Clear();
+            }
+
             if (PathNav.CurrentMovingUnit != null)
                 PathNav.CurrentMovingUnit.StopShowAttackRange();
             HideBuildingPanel();

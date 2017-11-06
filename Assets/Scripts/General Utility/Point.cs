@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Author: MaxLykoS
-//UpdateTime: 2017/10/21
+//UpdateTime: 2017/11/6
 
 [System.Serializable]
 public class Point

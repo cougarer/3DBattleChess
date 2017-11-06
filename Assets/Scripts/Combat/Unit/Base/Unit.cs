@@ -4,7 +4,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 //Author: MaxLykoS
-//UpdateTime: 2017/10/28
+//UpdateTime: 2017/11/6
+
 public interface ITransport
 {
     Unit PayLoad { set; get; }
@@ -385,5 +386,26 @@ public abstract class Unit : Grid {
         Destroy(gameObject);
         GridContainer.Instance.UnitDic.Remove(gridID);
     }
-#endregion
+    #endregion
+
+    public void Hide()
+    {
+        GridContainer.Instance.UnitDic.Remove(gridID);
+        gridID = null;
+        gameObject.SetActive(false);
+
+        if (movedToken != null)
+            Destroy(movedToken.gameObject);
+        movedToken = null;
+    }
+
+    public void Show(Point showPos)
+    {
+        GridContainer.Instance.UnitDic[showPos] = this;
+        gridID = showPos;
+        gameObject.SetActive(true);
+        Vector3 tp = GridContainer.Instance.TerrainDic[showPos].transform.position;
+        tp.y++;
+        transform.position = tp;
+    }
 }

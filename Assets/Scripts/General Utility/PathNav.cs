@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 
 //Author: MaxLykoS
-//UpdateTime: 2017/10/28
+//UpdateTime: 2017/11/6
 
 public static class PathNav
 {
@@ -12,7 +12,8 @@ public static class PathNav
     {
         get
         {
-            if (startPos == null)
+            if (startPos == null
+                || !GridContainer.Instance.UnitDic.ContainsKey(startPos))
                 return null;
             return GridContainer.Instance.UnitDic[startPos];
         }
