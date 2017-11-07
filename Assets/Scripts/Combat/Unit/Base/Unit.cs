@@ -464,4 +464,11 @@ public abstract class Unit : Grid {
                 break;
         }
     }
+
+    public bool isLongRangeUnit()
+    {
+        return gridType == GridType.Artillery
+            || gridType == GridType.Rockets
+            || gridType == GridType.BattleShip;
+    }
 }

@@ -190,11 +190,14 @@ public class CombatController : MonoBehaviour {
                     #region 攻击和被攻击
                     PathNav.CurrentMovingUnit.AttackInitiative(targetUnit);  //攻击
 
-                    if (PathNav.CurrentMovingUnit.isAlive())  //如果自己还或者
+                    if (PathNav.CurrentMovingUnit.isAlive())  //如果自己还活着
                     {
-                        if (targetUnit.isAlive())  //如果敌人还活着，就会被动攻击我
+                        if (targetUnit.isAlive())  //如果敌人还活着，就会被动攻击我，长程火力除外
                         {
-                            targetUnit.AttackPassive(PathNav.CurrentMovingUnit);
+                            if (!PathNav.CurrentMovingUnit.isLongRangeUnit())
+                            {
+                                targetUnit.AttackPassive(PathNav.CurrentMovingUnit);
+                            }
                         }
                         else
                         {
