@@ -246,7 +246,7 @@ public abstract class Unit : Grid {
                     switch (target)
                     {
                         case ArmorType.Men:
-                            firePower *= 1.5f;
+                            firePower *= 3f;
                             break;
                         case ArmorType.Plane:
                             firePower *= 3;
@@ -366,7 +366,7 @@ public abstract class Unit : Grid {
     {
         int defendStar = GridContainer.Instance.TerrainDic[gridID].DefendStar;
 
-        firePower *= (1/(float)defendStar);
+        firePower *= (1f - 0.1f * defendStar);
 
         HP -= firePower;
 
@@ -457,6 +457,9 @@ public abstract class Unit : Grid {
                 sr.sprite = Resources.LoadAll<Sprite>("Sprites/Cursor/num1to9")[1];
                 break;
             case 1:
+                sr.sprite = Resources.LoadAll<Sprite>("Sprites/Cursor/num1to9")[0];
+                break;
+            case 0:
                 sr.sprite = Resources.LoadAll<Sprite>("Sprites/Cursor/num1to9")[0];
                 break;
         }
