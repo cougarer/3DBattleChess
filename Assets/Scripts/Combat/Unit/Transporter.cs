@@ -44,8 +44,6 @@ public class Transporter : Vehicle, ITransport
         {
             PayLoad = u;
 
-            Debug.Log(u.gridType);
-
             u.StopHighLight();
             u.StopShowAttackRange();
 

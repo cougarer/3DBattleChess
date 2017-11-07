@@ -32,6 +32,7 @@ public abstract class Unit : Grid {
     protected List<Point> virtualRange;   //设定的范围
 
     public float HP;
+    private Transform HPDisplay;
     public int Oil;
     public float FirePower;
     [HideInInspector]
@@ -186,6 +187,7 @@ public abstract class Unit : Grid {
             return;
         }
         movedToken = Instantiate(Resources.Load<GameObject>("Prefabs/Cursor/MovedToken")).transform;
+        movedToken.SetParent(gameObject.transform);
         Vector3 vec3 = transform.position;
         vec3.y += 1.1f;
         movedToken.position = vec3;
@@ -407,5 +409,10 @@ public abstract class Unit : Grid {
         Vector3 tp = GridContainer.Instance.TerrainDic[showPos].transform.position;
         tp.y++;
         transform.position = tp;
+    }
+
+    public void SetHPText()
+    {
+        Instantiate();
     }
 }
