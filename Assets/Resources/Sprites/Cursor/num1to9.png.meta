@@ -1,0 +1,427 @@
+fileFormatVersion: 2
+guid: 3afec0487cec9144c94b9e65342866ab
+timeCreated: 1510032878
+licenseType: Free
+TextureImporter:
+  fileIDToRecycleName:
+    21300000: num1to9_0
+    21300002: num1to9_1
+    21300004: num1to9_2
+    21300006: num1to9_3
+    21300008: num1to9_4
+    21300010: num1to9_5
+    21300012: num1to9_6
+    21300014: num1to9_7
+    21300016: num1to9_8
+    21300018: num1to9_9
+  serializedVersion: 4
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+  isReadable: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    filterMode: -1
+    aniso: -1
+    mipBias: -1
+    wrapMode: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 2
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spritePixelsToUnits: 100
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  platformSettings:
+  - buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Standalone
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  - buildTarget: Android
+    maxTextureSize: 2048
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: num1to9_0
+      rect:
+        serializedVersion: 2
+        x: 112
+        y: 745
+        width: 128
+        height: 224
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -34, y: 112}
+        - {x: -64, y: 101}
+        - {x: -64, y: 69}
+        - {x: -58, y: 53}
+        - {x: -20, y: -112}
+        - {x: 27, y: -112}
+        - {x: 64, y: 47}
+        - {x: 64, y: 109}
+        - {x: 56, y: 112}
+      - - {x: 28, y: 110}
+        - {x: 29, y: 107}
+        - {x: 32, y: 107}
+        - {x: 34, y: 109}
+        - {x: 33, y: 112}
+        - {x: 30, y: 112}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: num1to9_1
+      rect:
+        serializedVersion: 2
+        x: 432
+        y: 729
+        width: 160
+        height: 248
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 80, y: 98}
+        - {x: 75, y: 119}
+        - {x: 66, y: 124}
+        - {x: -80, y: 124}
+        - {x: -80, y: 78}
+        - {x: -77, y: 73}
+        - {x: -36, y: 62}
+        - {x: -10, y: 66}
+        - {x: -80, y: -45}
+        - {x: -80, y: -96}
+        - {x: -76, y: -109}
+        - {x: -14, y: -124}
+        - {x: 58, y: -124}
+        - {x: 68, y: -69}
+        - {x: 57, y: -62}
+        - {x: 80, y: -22}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: num1to9_2
+      rect:
+        serializedVersion: 2
+        x: 776
+        y: 737
+        width: 160
+        height: 240
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -73, y: 120}
+        - {x: -78, y: 105}
+        - {x: -80, y: 81}
+        - {x: -57, y: 64}
+        - {x: -42, y: 56}
+        - {x: -28, y: 33}
+        - {x: -33, y: 29}
+        - {x: -32, y: 27}
+        - {x: -33, y: 28}
+        - {x: -33, y: 31}
+        - {x: -42, y: 41}
+        - {x: -80, y: 42}
+        - {x: -80, y: -120}
+        - {x: 80, y: -120}
+        - {x: 80, y: 116}
+        - {x: 76, y: 120}
+      - - {x: 63, y: -82}
+        - {x: 66, y: -81}
+        - {x: 66, y: -78}
+        - {x: 63, y: -77}
+        - {x: 61, y: -79}
+      - - {x: 71, y: 6}
+        - {x: 74, y: 7}
+        - {x: 74, y: 10}
+        - {x: 71, y: 11}
+        - {x: 69, y: 9}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: num1to9_3
+      rect:
+        serializedVersion: 2
+        x: 95
+        y: 393
+        width: 168
+        height: 232
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -17, y: 116}
+        - {x: -84, y: 16}
+        - {x: -84, y: -79}
+        - {x: -21, y: -116}
+        - {x: 46, y: -116}
+        - {x: 84, y: -82}
+        - {x: 84, y: 114}
+        - {x: 74, y: 116}
+      - - {x: -7, y: 5}
+        - {x: -1, y: 11}
+        - {x: -1, y: -8}
+        - {x: -6, y: -8}
+      - - {x: -4, y: 9}
+        - {x: -8, y: 5}
+        - {x: -8, y: 4}
+        - {x: -6, y: 2}
+        - {x: -3, y: 2}
+        - {x: -1, y: 4}
+        - {x: -1, y: 7}
+        - {x: -3, y: 9}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: num1to9_4
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 393
+        width: 176
+        height: 232
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -71, y: 116}
+        - {x: -81, y: 20}
+        - {x: -66, y: -2}
+        - {x: -88, y: -39}
+        - {x: -88, y: -115}
+        - {x: -78, y: -116}
+        - {x: 62, y: -116}
+        - {x: 88, y: -107}
+        - {x: 88, y: 95}
+        - {x: 73, y: 116}
+      - - {x: -8, y: -14}
+        - {x: -5, y: -13}
+        - {x: -5, y: -10}
+        - {x: -8, y: -9}
+        - {x: -10, y: -11}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: num1to9_5
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 393
+        width: 168
+        height: 232
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -84, y: 80}
+        - {x: -84, y: -69}
+        - {x: -76, y: -113}
+        - {x: -59, y: -116}
+        - {x: 84, y: -116}
+        - {x: 84, y: 116}
+        - {x: -42, y: 116}
+        - {x: -78, y: 106}
+      - - {x: -11, y: -63}
+        - {x: -19, y: -27}
+        - {x: 8, y: -18}
+        - {x: 6, y: -61}
+      - - {x: -14, y: -13}
+        - {x: -11, y: -12}
+        - {x: -11, y: -9}
+        - {x: -14, y: -8}
+        - {x: -16, y: -10}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: num1to9_6
+      rect:
+        serializedVersion: 2
+        x: 88
+        y: 49
+        width: 176
+        height: 223
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 64, y: 107.5}
+        - {x: 50, y: 111.5}
+        - {x: -86, y: 111.5}
+        - {x: -87, y: 108.5}
+        - {x: -88, y: 96.5}
+        - {x: -88, y: 79.5}
+        - {x: -87, y: 78.5}
+        - {x: -82, y: 78.5}
+        - {x: -86, y: -82.5}
+        - {x: -87, y: -103.5}
+        - {x: -66, y: -111.5}
+        - {x: -25, y: -111.5}
+        - {x: 88, y: 45.5}
+        - {x: 88, y: 89.5}
+        - {x: 85, y: 90.5}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: num1to9_7
+      rect:
+        serializedVersion: 2
+        x: 424
+        y: 49
+        width: 173
+        height: 224
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 78.5, y: 112}
+        - {x: -86.5, y: 112}
+        - {x: -86.5, y: -90}
+        - {x: -77.5, y: -102}
+        - {x: -66.5, y: -98}
+        - {x: -63.5, y: -94}
+        - {x: -62.5, y: -92}
+        - {x: -63.5, y: -92}
+        - {x: -62.5, y: -93}
+        - {x: -74.5, y: -109}
+        - {x: -58.5, y: -112}
+        - {x: 82.5, y: -112}
+        - {x: 86.5, y: -97}
+        - {x: 86.5, y: 95}
+      - - {x: -12.5, y: -77}
+        - {x: -11.5, y: -76}
+        - {x: -8.5, y: -70}
+        - {x: 4.5, y: -25}
+        - {x: 7.5, y: -22}
+        - {x: 7.5, y: -21}
+        - {x: 6.5, y: -20}
+        - {x: 6.5, y: -19}
+        - {x: 5.5, y: -22}
+        - {x: 5.5, y: -23}
+        - {x: 8.5, y: -26}
+        - {x: 10.5, y: -26}
+        - {x: 7.5, y: -29}
+        - {x: 6.5, y: -31}
+        - {x: -7.5, y: -68}
+        - {x: -8.5, y: -73}
+        - {x: -8.5, y: -74}
+        - {x: -7.5, y: -75}
+        - {x: -8.5, y: -77}
+        - {x: -5.5, y: -80}
+        - {x: -4.5, y: -79}
+        - {x: -8.5, y: -77}
+      - - {x: 2.5, y: 43}
+        - {x: 4.5, y: 64}
+        - {x: 4.5, y: 69}
+        - {x: 9.5, y: 69}
+        - {x: 9.5, y: 70}
+        - {x: 8.5, y: 69}
+        - {x: 6.5, y: 66}
+        - {x: 6.5, y: 44}
+        - {x: 9.5, y: 41}
+        - {x: 7.5, y: 43}
+      - - {x: 48.5, y: 107}
+        - {x: 51.5, y: 108}
+        - {x: 51.5, y: 112}
+        - {x: 44.5, y: 112}
+        - {x: 44.5, y: 111}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: num1to9_8
+      rect:
+        serializedVersion: 2
+        x: 425
+        y: 100
+        width: 4
+        height: 7
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: -2, y: 3.5}
+        - {x: -2, y: -3.5}
+        - {x: 1, y: -3.5}
+        - {x: 2, y: -2.5}
+        - {x: 2, y: 3.5}
+      tessellationDetail: 0
+    - serializedVersion: 2
+      name: num1to9_9
+      rect:
+        serializedVersion: 2
+        x: 768
+        y: 49
+        width: 168
+        height: 232
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline:
+      - - {x: 15, y: 116}
+        - {x: -41, y: 116}
+        - {x: -52, y: 112}
+        - {x: -54, y: 102}
+        - {x: -54, y: 99}
+        - {x: -55, y: 97}
+        - {x: -54, y: 97}
+        - {x: -55, y: 98}
+        - {x: -54, y: 99}
+        - {x: -58, y: 108}
+        - {x: -84, y: 73}
+        - {x: -84, y: -90}
+        - {x: -79, y: -116}
+        - {x: 72, y: -116}
+        - {x: 84, y: -113}
+        - {x: 84, y: 95}
+        - {x: 29, y: 112}
+      - - {x: 5, y: 7}
+        - {x: 7, y: 6}
+        - {x: 6, y: 7}
+        - {x: 4, y: 5}
+        - {x: 2, y: 5}
+        - {x: -5, y: 8}
+      tessellationDetail: 0
+    outline: []
+  spritePackingTag: 
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -83,7 +83,8 @@ public abstract class Unit : Grid {
     /// </summary>
     public override void OnInstatiate()
     {
-
+        HPDisplay = Instantiate(Resources.Load<GameObject>("Prefabs/Cursor/HPDisplay"), transform).transform;
+        HPDisplay.position = transform.position+new Vector3(0,1,0);
     }
 
     public abstract bool CheckCouldMoveTo(TerrainBase tb);
@@ -367,6 +368,8 @@ public abstract class Unit : Grid {
         firePower *= (1/(float)defendStar);
 
         HP -= firePower;
+
+        UpdateHPText();
     }
 
     /// <summary>
@@ -411,8 +414,40 @@ public abstract class Unit : Grid {
         transform.position = tp;
     }
 
-    public void SetHPText()
+    public void UpdateHPText()
     {
-        Instantiate();
+        if (HP == 100) return;
+        int hp = (int)(HP / 10f);
+        SpriteRenderer sr = HPDisplay.gameObject.GetComponent<SpriteRenderer>();
+        switch (hp)
+        {
+            case 9:
+                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_9");
+                break;
+            case 8:
+                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_7");
+                break;
+            case 7:
+                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_6");
+                break;
+            case 6:
+                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_5");
+                break;
+            case 5:
+                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_4");
+                break;
+            case 4:
+                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_3");
+                break;
+            case 3:
+                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_2");
+                break;
+            case 2:
+                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_1");
+                break;
+            case 1:
+                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_0");
+                break;
+        }
     }
 }
