@@ -84,7 +84,7 @@ public abstract class Unit : Grid {
     public override void OnInstatiate()
     {
         HPDisplay = Instantiate(Resources.Load<GameObject>("Prefabs/Cursor/HPDisplay"), transform).transform;
-        HPDisplay.position = transform.position+new Vector3(0,1,0);
+        HPDisplay.position = transform.position+new Vector3(0,2,0);
     }
 
     public abstract bool CheckCouldMoveTo(TerrainBase tb);
@@ -212,7 +212,7 @@ public abstract class Unit : Grid {
         float firePower;
 
         GetDamageNum(out firePower, attackType, targetUnit.armorType);
-        firePower *= 0.7f;
+        firePower *= 0.6f;
 
         targetUnit.BeAttacked(firePower);
     }
@@ -283,6 +283,7 @@ public abstract class Unit : Grid {
                 firePower = 0;break;
             default: throw new Exception("未知攻击类型");
         }
+        firePower *= (HP / 100f);
     }
 
     /// <summary>
@@ -393,6 +394,9 @@ public abstract class Unit : Grid {
     }
     #endregion
 
+    /// <summary>
+    /// 隐藏单位，主要用于上车
+    /// </summary>
     public void Hide()
     {
         GridContainer.Instance.UnitDic.Remove(gridID);
@@ -404,6 +408,10 @@ public abstract class Unit : Grid {
         movedToken = null;
     }
 
+    /// <summary>
+    /// 显示单位，主要用于下车
+    /// </summary>
+    /// <param name="showPos"></param>
     public void Show(Point showPos)
     {
         GridContainer.Instance.UnitDic[showPos] = this;
@@ -414,6 +422,9 @@ public abstract class Unit : Grid {
         transform.position = tp;
     }
 
+    /// <summary>
+    /// 更新血条
+    /// </summary>
     public void UpdateHPText()
     {
         if (HP == 100) return;
@@ -422,31 +433,31 @@ public abstract class Unit : Grid {
         switch (hp)
         {
             case 9:
-                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_9");
+                sr.sprite = Resources.LoadAll<Sprite>("Sprites/Cursor/num1to9")[9];
                 break;
             case 8:
-                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_7");
+                sr.sprite = Resources.LoadAll<Sprite>("Sprites/Cursor/num1to9")[7];
                 break;
             case 7:
-                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_6");
+                sr.sprite = Resources.LoadAll<Sprite>("Sprites/Cursor/num1to9")[6];
                 break;
             case 6:
-                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_5");
+                sr.sprite = Resources.LoadAll<Sprite>("Sprites/Cursor/num1to9")[5];
                 break;
             case 5:
-                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_4");
+                sr.sprite = Resources.LoadAll<Sprite>("Sprites/Cursor/num1to9")[4];
                 break;
             case 4:
-                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_3");
+                sr.sprite = Resources.LoadAll<Sprite>("Sprites/Cursor/num1to9")[3];
                 break;
             case 3:
-                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_2");
+                sr.sprite = Resources.LoadAll<Sprite>("Sprites/Cursor/num1to9")[2];
                 break;
             case 2:
-                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_1");
+                sr.sprite = Resources.LoadAll<Sprite>("Sprites/Cursor/num1to9")[1];
                 break;
             case 1:
-                sr.sprite = Resources.Load<Sprite>("Sprites/Cursor/num1to9/num1to9_0");
+                sr.sprite = Resources.LoadAll<Sprite>("Sprites/Cursor/num1to9")[0];
                 break;
         }
     }

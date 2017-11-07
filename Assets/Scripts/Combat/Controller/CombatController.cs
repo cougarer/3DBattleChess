@@ -202,16 +202,18 @@ public class CombatController : MonoBehaviour {
                         }
                     }
 
-                    if (!PathNav.CurrentMovingUnit.isAlive())  //自己被敌人被动攻击干掉后，就被摧毁
-                    {
-                        PathNav.CurrentMovingUnit.BeDestroyed();
-                    }
                     #endregion
 
                     PathNav.CurrentMovingUnit.SetMovedToken();//攻击完了就标记已运动
 
                     firstClick = 1;
                     PathNav.CurrentMovingUnit.StopShowAttackRange();
+
+                    if (!PathNav.CurrentMovingUnit.isAlive())  //自己被敌人被动攻击干掉后，就被摧毁
+                    {
+                        PathNav.CurrentMovingUnit.BeDestroyed();
+                    }
+
                     return;
                 }
                 #endregion
