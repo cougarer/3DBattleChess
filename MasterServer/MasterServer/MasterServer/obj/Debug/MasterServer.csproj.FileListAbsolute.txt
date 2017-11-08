@@ -1,0 +1,1 @@
+C:\Users\rjxy\Documents\GitHub\3DBattleChess\MasterServer\MasterServer\MasterServer\bin\Debug\MasterServer.exe.config

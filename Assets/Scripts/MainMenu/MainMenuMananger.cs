@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 //Author: MaxLykoS
@@ -13,6 +14,7 @@ public class MainMenuMananger : MonoBehaviour
         MenuButtonsPanel.gameObject.SetActive(true);
         LobbyPanel.gameObject.SetActive(false);
         HostGamePanel.gameObject.SetActive(false);
+        RoomPanel.gameObject.SetActive(false);
 
         mapList = new List<GameObject>();
     }
@@ -37,7 +39,7 @@ public class MainMenuMananger : MonoBehaviour
 
     public void BtnMapEditor()
     {
-
+        SceneManager.LoadSceneAsync(1);
     }
 
     public void BtnOptions()
@@ -51,9 +53,11 @@ public class MainMenuMananger : MonoBehaviour
     /// 联机大厅面板
     /// </summary>
     public Transform LobbyPanel;
+    public InputField NameField;
+    private string PlayerName;
     public void BtnBackToMenu()
     {
-        MenuButtonsPanel.gameObject.SetActive(false);
+        MenuButtonsPanel.gameObject.SetActive(true);
 
         LobbyPanel.gameObject.SetActive(false);
     }
@@ -65,7 +69,9 @@ public class MainMenuMananger : MonoBehaviour
 
     public void BttnJoin()
     {
-        
+        PlayerName = NameField.text;
+        if (PlayerName == null) return;
+
     }
 
     private List<GameObject> mapList;
@@ -74,6 +80,9 @@ public class MainMenuMananger : MonoBehaviour
     /// </summary>
     public void BtnHostGamePanel()
     {
+        PlayerName = NameField.text;
+        if (PlayerName == null) return;
+
         LobbyPanel.gameObject.SetActive(false);
         //中断连接
 

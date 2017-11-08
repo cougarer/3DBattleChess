@@ -183,7 +183,7 @@ public class EditorController : MonoBehaviour
     /// </summary>
     public void BtnReturnMenu()
     {
-        //UnityEngine.SceneManagement.SceneManager.LoadSceneAsync();
+        UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(0);
     }
 
     /// <summary>

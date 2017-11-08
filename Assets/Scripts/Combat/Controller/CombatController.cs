@@ -45,7 +45,7 @@ public class CombatController : MonoBehaviour {
 
         GridContainer.isEditorMode = false;   //开启战斗模式
 
-        MapLoader.LoadCustomLevel("Test");
+        MapLoader.LoadCustomLevel("CustomLevel1");
         GridContainer.GameStartKey = true;
     }
 
