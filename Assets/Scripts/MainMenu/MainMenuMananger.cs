@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 //Author: MaxLykoS
 //UpdateTime: 2017/11/7
@@ -9,35 +10,22 @@ public class MainMenuMananger : MonoBehaviour
 {
     void Start()
     {
-        BtnLobbyTr = GameObject.Find("Canvas/MenuButtonsPanel/BtnLobby").transform;
-        BtnMapEditorTr = GameObject.Find("Canvas/MenuButtonsPanel/BtnMapEditor").transform;
-        BtnOptionsTr = GameObject.Find("Canvas/MenuButtonsPanel/BtnOptions").transform;
-        BtnQuitGameTr = GameObject.Find("Canvas/MenuButtonsPanel/BtnQuit").transform;
+        MenuButtonsPanel.gameObject.SetActive(true);
+        LobbyPanel.gameObject.SetActive(false);
+        HostGamePanel.gameObject.SetActive(false);
 
-        TrList = new List<Transform>();
-        TrList.Add(BtnLobbyTr);
-        TrList.Add(BtnMapEditorTr);
-        TrList.Add(BtnOptionsTr);
-        TrList.Add(BtnQuitGameTr);
+        mapList = new List<GameObject>();
     }
 
     #region 主菜单四个按钮,开启大厅
-    private Transform BtnLobbyTr;
-    private Transform BtnMapEditorTr;
-    private Transform BtnOptionsTr;
-    private Transform BtnQuitGameTr;
+    public Transform MenuButtonsPanel;
 
-    public Transform LobbyPanel;
-
-    List<Transform> TrList;   //用来存储要隐藏或显示的UI
-
-
+    /// <summary>
+    /// 进入联机大厅
+    /// </summary>
     public void BtnLobby()
     {
-        foreach (Transform tr in TrList)
-        {
-            tr.gameObject.SetActive(false);
-        }
+        MenuButtonsPanel.gameObject.SetActive(false);
 
         LobbyPanel.gameObject.SetActive(true);
     }
@@ -59,27 +47,98 @@ public class MainMenuMananger : MonoBehaviour
     #endregion
 
     #region 联机大厅
+    /// <summary>
+    /// 联机大厅面板
+    /// </summary>
+    public Transform LobbyPanel;
     public void BtnBackToMenu()
     {
-        foreach (Transform tr in TrList)
-        {
-            tr.gameObject.SetActive(true);
-        }
+        MenuButtonsPanel.gameObject.SetActive(false);
 
         LobbyPanel.gameObject.SetActive(false);
     }
 
-    public void Refresh()
+    public void BtnRefresh()
     {
 
     }
 
-    public void Join()
+    public void BttnJoin()
     {
         
     }
 
-    public void HostGame()
+    private List<GameObject> mapList;
+    /// <summary>
+    /// 进入开服面板
+    /// </summary>
+    public void BtnHostGamePanel()
+    {
+        LobbyPanel.gameObject.SetActive(false);
+        //中断连接
+
+        HostGamePanel.gameObject.SetActive(true);
+
+        //加载本地地图
+        foreach (string levelName in MapLoader.LevelDic.Keys)
+        {
+            GameObject go = Instantiate(Resources.Load<GameObject>("Prefabs/Lobby/LevelTag"));
+            go.transform.GetComponentInChildren<Text>().text = levelName;    //关卡名
+            go.GetComponent<Button>().onClick.AddListener(delegate () { BtnChooseMap(levelName); });//关卡名
+            go.transform.SetParent(MapListPanel);
+            mapList.Add(go);
+        }
+        //加载第三方地图
+        foreach (string levelName in MapLoader.CustomLevelDic.Keys)
+        {
+            GameObject go = Instantiate(Resources.Load<GameObject>("Prefabs/Lobby/LevelTag"));
+            go.transform.GetComponentInChildren<Text>().text = levelName;    //关卡名
+            go.GetComponent<Button>().onClick.AddListener(delegate () {BtnChooseMap(levelName);});//关卡名
+            go.transform.SetParent(MapListPanel);
+            mapList.Add(go);
+        }
+    }
+    #endregion
+
+    #region 开房间
+    /// <summary>
+    /// 开服面板
+    /// </summary>
+    public Transform HostGamePanel;
+    /// <summary>
+    /// 显示所有关卡
+    /// </summary>
+    public Transform MapListPanel;
+
+    private string CurrentMapName=null;
+    public void BtnHostGame()
+    {
+
+    }
+
+    /// <summary>
+    /// 返回联机大厅
+    /// </summary>
+    public void BtnBackToLobbyPanel()
+    {
+        for (int i = 0; i < mapList.Count; i++)
+        {
+            Destroy(mapList[i].gameObject);
+        }
+        HostGamePanel.gameObject.SetActive(false);
+        LobbyPanel.gameObject.SetActive(true);
+    }
+
+    public void BtnChooseMap(string name)
+    {
+        CurrentMapName = name;
+        Debug.Log(name);
+    }
+    #endregion
+
+    #region 房间等待大厅
+    public Transform RoomPanel;
+    public void BtnStartServer()
     {
 
     }
