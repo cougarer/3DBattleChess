@@ -10,8 +10,9 @@ namespace MasterServer.BottomLayer
     class Conn
     {
         //连接
-        private Socket Client;
+        private Socket clientSocket;
 
+        public int ID;
         public bool IsUse=false;
 
         //缓冲区长度
@@ -37,7 +38,7 @@ namespace MasterServer.BottomLayer
             {
                 if (!IsUse)
                     return "该连接未启用";
-                return Client.RemoteEndPoint.ToString();
+                return clientSocket.RemoteEndPoint.ToString();
             }
         }
 
@@ -48,7 +49,7 @@ namespace MasterServer.BottomLayer
 
         public void Init(Socket client)
         {
-            Client = client;
+            clientSocket = client;
             IsUse = true;
             BuffCount = 0;
 
@@ -73,8 +74,8 @@ namespace MasterServer.BottomLayer
                 return;
 
             Console.WriteLine("断开连接" + Address);
-            Client.Shutdown(SocketShutdown.Both);
-            Client.Close();
+            clientSocket.Shutdown(SocketShutdown.Both);
+            clientSocket.Close();
             IsUse = false;
 
         }
@@ -86,7 +87,7 @@ namespace MasterServer.BottomLayer
         /// <param name="state"></param>
         public void BeginReceive(AsyncCallback callback, object state)
         {
-            Client.BeginReceive(ReadBuff, BuffCount, BuffRemain(), SocketFlags.None, callback, state);
+            clientSocket.BeginReceive(ReadBuff, BuffCount, BuffRemain(), SocketFlags.None, callback, state);
         }
 
         /// <summary>
@@ -95,7 +96,21 @@ namespace MasterServer.BottomLayer
         /// <param name="ar"></param>
         public int EndReceive(IAsyncResult ar)
         {
-            return Client.EndReceive(ar);
+            return clientSocket.EndReceive(ar);
+        }
+
+        /// <summary>
+        /// 异步发送消息
+        /// </summary>
+        /// <param name="buffer"></param>
+        /// <param name="offset"></param>
+        /// <param name="size"></param>
+        /// <param name="socketFlags"></param>
+        /// <param name="callback"></param>
+        /// <param name="state"></param>
+        public void BeginSend(byte[] buffer, int offset, int size, SocketFlags socketFlags, AsyncCallback callback, object state)
+        {
+            clientSocket.BeginSend(buffer, offset, size, socketFlags, callback, state);
         }
     }
 }
