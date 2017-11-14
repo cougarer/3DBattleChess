@@ -5,15 +5,14 @@ using System.Net.Sockets;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MasterServer.BottomLayer
+namespace MasterServer
 {
     class Conn
     {
         //连接
         private Socket clientSocket;
 
-        public int ID;
-        public bool IsUse=false;
+        public bool IsUse = false;
 
         //缓冲区长度
         public const int BUFFER_SIZE = 1024;
@@ -27,6 +26,9 @@ namespace MasterServer.BottomLayer
 
         //心跳时间
         public long LastTickTime = long.MinValue;
+
+        //玩家
+        public Player player;
 
         /// <summary>
         /// 客户端ip地址
@@ -52,8 +54,8 @@ namespace MasterServer.BottomLayer
             clientSocket = client;
             IsUse = true;
             BuffCount = 0;
-
             //心跳处理
+            LastTickTime = Sys.GetTimeStamp();
         }
 
         /// <summary>
@@ -72,12 +74,16 @@ namespace MasterServer.BottomLayer
         {
             if (!IsUse)
                 return;
+            if (player != null)
+            {
+                player.Logout();
+                return;
+            }
 
             Console.WriteLine("断开连接" + Address);
             clientSocket.Shutdown(SocketShutdown.Both);
             clientSocket.Close();
             IsUse = false;
-
         }
 
         /// <summary>

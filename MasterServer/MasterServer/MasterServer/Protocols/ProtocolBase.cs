@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MasterServer.BottomLayer
+namespace MasterServer
 {
     //协议基类
     class ProtocolBase

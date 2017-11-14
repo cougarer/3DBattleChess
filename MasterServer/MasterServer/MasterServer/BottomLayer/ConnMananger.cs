@@ -3,10 +3,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using System.Timers;
 
-namespace MasterServer.BottomLayer
+namespace MasterServer
 {
     class ConnMananger
     {
@@ -14,17 +16,24 @@ namespace MasterServer.BottomLayer
         public Socket Listener;
 
         //连接池
-        private List<Conn> Conns;
-        public Stack<int> FreeConnIndexs;
-        public LinkedList<int> UsingConnIndexs;
+        public Conn[] Conns;
 
         public const int MAX_CONN = 1000;
 
         //协议
         public ProtocolBase proto;
+        //消息分发
+        public HandleConnMsg handleConnMsg = new HandleConnMsg();
+        public HandlePlayerEvent handlerPlayerEvent = new HandlePlayerEvent();
+        public HandlePlayerMsg handlePlayerMsg = new HandlePlayerMsg();
 
         //单例
         public static ConnMananger Instance;
+
+        //主定时器
+        private Timer Timer = new Timer(1000);// 一秒一次
+        //心跳时间
+        public const long HeartBeatTime = 30;
 
         public ConnMananger()
         {
@@ -35,20 +44,30 @@ namespace MasterServer.BottomLayer
         /// 从连接池中找到一个空闲对象，找不到则返回null
         /// </summary>
         /// <returns></returns>
-        public Conn GetNewConn()
+        public int GetIndex()
         {
-            if (FreeConnIndexs.Count == 0)
-                return null;
-            int id = FreeConnIndexs.Pop();
-            UsingConnIndexs.AddLast(id);
-            Conns[id].ID = id;
-            return Conns[id];
+            if (Conns == null) return -1;
+            for (int i = 0; i < Conns.Length; i++)
+            {
+                if (Conns[i] == null)
+                {
+                    Conns[i] = new Conn();
+                    return i;
+                }
+                else if(!Conns[i].IsUse)
+                {
+                    return i;
+                }
+            }
+            return -1;
         }
 
         public void Start(string host,int port)
         {
             //定时器
-
+            Timer.Elapsed += new System.Timers.ElapsedEventHandler(HandleMainTimer);
+            Timer.AutoReset = false;
+            Timer.Enabled = true;
             //数据库
 
             //初始化连接池
@@ -64,20 +83,45 @@ namespace MasterServer.BottomLayer
             Listener.BeginAccept(AcceptCb, null);
             Console.WriteLine("服务器启动！");
         }
+        private void HandleMainTimer(object sender,ElapsedEventArgs e)
+        {
+            HeartBeat();
+            Timer.Start();  //AutoReset
+        }
+
+        private void HeartBeat()
+        {
+            long timeNow = Sys.GetTimeStamp();
+
+            for (int i=0;i<Conns.Length;i++)
+            {
+                Conn conn = Conns[i];
+                if (conn == null) continue;
+                if (!conn.IsUse) continue;
+                //依次判断每个连接的心跳时间间隔是否过长
+                if (conn.LastTickTime < timeNow - HeartBeatTime)
+                {
+                    Console.WriteLine(conn.Address+"掉线！");
+                    lock (conn)
+                    {
+                        conn.Close();
+                    }
+                }
+            }
+        }
 
         /// <summary>
         /// 断开连接
         /// </summary>
         public void Close()
         {
-            foreach (Conn conn in Conns)
+            for(int i=0;i<Conns.Length;i++)
             {
-                if (!conn.IsUse)
-                    continue;
+                Conn conn = Conns[i];
+                if (conn == null) continue;
+                if (!conn.IsUse) continue;
                 lock (conn)
                 {
-                    UsingConnIndexs.Remove(conn.ID);
-                    FreeConnIndexs.Push(conn.ID);
                     conn.Close();
                 }
             }
@@ -92,14 +136,15 @@ namespace MasterServer.BottomLayer
             try
             {
                 Socket newClient = Listener.EndAccept(ar);
-                Conn newConn = GetNewConn();
-                if (newConn == null)
+                int index = GetIndex();
+                if (index < 0)
                 {
                     newClient.Close();
-                    Console.WriteLine("警告，连接已满");
+                    Console.WriteLine("连接已满");
                 }
                 else
                 {
+                    Conn newConn = Conns[index];
                     newConn.Init(newClient);
                     string adr = newConn.Address;
                     Console.WriteLine("客户端连接" + adr + " hashcode:" + newConn.GetHashCode());
@@ -163,8 +208,41 @@ namespace MasterServer.BottomLayer
                 return; //不懂
             }
             ProtocolBase protocol = proto.Decode(conn.ReadBuff, sizeof(Int32), conn.msgLength);
-
+            HandleMsg
             //???
+        }
+
+        private void HandleMsg(Conn conn, ProtocolBase protoBase)
+        {
+            string name = protoBase.GetName();  //协议名称
+            string methodName = "Msg" + name;
+
+            //连接协议分发
+            if (conn.player == null || name == "HeartBeat" || name == "Logout")
+            {
+                MethodInfo mm = handleConnMsg.GetType().GetMethod(methodName);//反射找到该方法名
+                if (mm == null)
+                {
+                    Console.WriteLine("HandleMsg找不到处理连接的方法" + methodName);
+                    return;
+                }
+                Object[] obj = new object[] { conn, protoBase };
+                Console.WriteLine("处理连接消息" + conn.Address);
+                mm.Invoke(handleConnMsg, obj);
+            }
+            //角色协议分发
+            else 
+            {
+                MethodInfo mm = handlePlayerMsg.GetType().GetMethod(methodName);
+                if (mm == null)
+                {
+                    Console.WriteLine("HandleMsg没有处理玩家的方法" + methodName);
+                    return;
+                }
+                Object[] obj = new object[] { conn.player, protoBase };
+                Console.WriteLine("处理玩家信息" + conn.player.id + ":" + name);
+                mm.Invoke(handlePlayerMsg, obj);
+            }
         }
 
         public void Send(Conn conn, ProtocolBase protocol)
@@ -184,9 +262,11 @@ namespace MasterServer.BottomLayer
 
         public void Broadcast(ProtocolBase protocol)
         {
-            foreach (int id in UsingConnIndexs)
+            for (int i = 0; i < Conns.Length; i++)
             {
-                Send(Conns[id], protocol);
+                if (!Conns[i].IsUse) continue;
+                if (Conns[i].player == null) continue;
+                Send(Conns[i], protocol);
             }
         }
 
@@ -194,11 +274,18 @@ namespace MasterServer.BottomLayer
         {
             int playerCount = 0;
             Console.WriteLine("===服务器登录信息===");
-            foreach (int id in UsingConnIndexs)
+            for (int i=0;i<Conns.Length;i++)
             {
-                string str = "连接" + Conns[id].Address;
-                Console.WriteLine(str);
-                playerCount++;              
+                if (Conns[i] == null) continue;
+                if (!Conns[i].IsUse) continue;
+
+                if (Conns[i].player != null)
+                {
+                    string str = "连接" + Conns[i].Address;
+                    str += "玩家id" + Conns[i].player.id;
+                    playerCount++;
+                    Console.WriteLine(str);
+                }           
             }
             Console.WriteLine("当前在线服务器数量 " + playerCount.ToString());
         }
