@@ -118,5 +118,10 @@ namespace MasterServer
         {
             clientSocket.BeginSend(buffer, offset, size, socketFlags, callback, state);
         }
+
+        public void Send(ProtocolBase protocol)
+        {
+            ConnMananger.Instance.Send(this, protocol);
+        }
     }
 }

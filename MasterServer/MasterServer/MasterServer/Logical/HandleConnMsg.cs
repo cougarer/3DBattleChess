@@ -42,8 +42,75 @@ namespace MasterServer
             //    protocol.AddInt(-1);
             //}//创建一个返回协议
 
-            //成功就创建角色
+            //创建角色
+            //DataMgr.Instance.CreatePlayer(id);
+            conn.Send(protocol);
+        }
 
+        public void MsgLogin(Conn conn,ProtocolBase protoBase)
+        {
+            int start = 0;
+            ProtocolBytes protocol = (ProtocolBytes)protoBase;
+            string protoName = protocol.GetString(start,ref start);
+            string id = protocol.GetString(start, ref start);
+            string pw = protocol.GetString(start, ref start);
+            string strFormat = "收到登录协议" + conn.Address;
+            Console.WriteLine(strFormat + "角色名" + id + "密码" + pw);
+
+            //构建返回协议
+            ProtocolBytes protocolRet = new ProtocolBytes();
+            protocolRet.AddString("Login");
+
+            //验证
+            //if(!DataMgr.Instance.CheckPassWord(id,pw))
+            //{
+            //    protocolRet.AddInt(-1);
+            //    conn.Send(protocolRet);
+            //    return;
+            //}
+
+            //是否已经登录（重复登录则踢掉之前那个）
+            ProtocolBytes protocolLotout = new ProtocolBytes();
+            protocolLotout.AddString("Logout");
+            protocolLotout.AddInt(0);
+            if (!Player.KickOff(id, protocolLotout))
+            {
+                protocolRet.AddInt(-1);
+                conn.Send(protocolRet);
+                return;
+            }
+
+            //获取玩家数据
+            //PlayerData playerData = DataMgr.Instance.GetPlayerData(id);
+            //if(playerData==null)
+            //{
+            //    protocolRet.AddInt(-1);
+            //    conn.Send(protocolRet);
+            //    return;
+            //} 
+
+            //conn.player = new Player(id, conn);
+            //conn.player.Data = playerData;
+
+            //事件触发
+            ConnMananger.Instance.handlerPlayerEvent.OnLogin(conn.player);
+            //返回协议
+            protocolRet.AddInt(0);
+            conn.Send(protocolRet);
+        }
+        //下线
+        //协议参数：无
+        //返回协议：0 正常下线
+        public void MsgLogout(Conn conn, ProtocolBase protoBase)
+        {
+            ProtocolBytes protocol = new ProtocolBytes();
+            protocol.AddString("Logout");
+            protocol.AddInt(0);
+            conn.Send(protocol);
+            if (conn.player != null)
+            {
+                conn.player.Logout();
+            }
         }
     }
 }

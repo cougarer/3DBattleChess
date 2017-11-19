@@ -69,10 +69,16 @@ namespace MasterServer
             Timer.AutoReset = false;
             Timer.Enabled = true;
             //数据库
+            //???
 
+            Conns = new Conn[MAX_CONN];
+            for (int i = 0; i < MAX_CONN; i++)
+            {
+                Conns[i] = new Conn();
+            }
             //初始化连接池
             Listener = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
-
+            
             //bind端口
             Listener.Bind(new IPEndPoint(IPAddress.Parse(host), port));
 
@@ -186,7 +192,7 @@ namespace MasterServer
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine(ex.Message);
+                    Console.WriteLine("收到[" + conn.Address + "]断开连接" + ex.Message);
                     conn.Close();
                 }
             }
@@ -208,8 +214,16 @@ namespace MasterServer
                 return; //不懂
             }
             ProtocolBase protocol = proto.Decode(conn.ReadBuff, sizeof(Int32), conn.msgLength);
-            HandleMsg
-            //???
+            HandleMsg(conn, protocol);
+
+            //清除已处理的消息 ???，不懂
+            int count = conn.BuffCount - conn.msgLength - sizeof(Int32);
+            Array.Copy(conn.ReadBuff, sizeof(Int32) + conn.msgLength, conn.ReadBuff, 0, count);
+            conn.BuffCount = count; // 赋值到头，之后 重置buffCount 到已接受新的数据的长度的末尾位置
+            if (conn.BuffCount > 0)
+            {
+                ProcessData(conn); //接着处理剩下的没有处理玩的数据
+            }
         }
 
         private void HandleMsg(Conn conn, ProtocolBase protoBase)
