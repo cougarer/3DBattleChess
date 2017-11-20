@@ -174,7 +174,6 @@ public class CameraController : MonoBehaviour {
     }
     #endregion
 
-    private bool clicked = false;
     /// <summary>
     /// 取消操作事件
     /// </summary>
