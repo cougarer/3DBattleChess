@@ -48,7 +48,7 @@ public class ProtocolBytes:ProtocolBase
         Int32 len = str.Length;
         byte[] lenBytes = BitConverter.GetBytes(len);
         byte[] strBytes = System.Text.Encoding.UTF8.GetBytes(str);
-        if (bytes == null)//如果此时传输的字符串为空，即第一次，直接长度+数据
+        if (bytes == null)//如果此时传输的字符串为空
         {
             bytes = lenBytes.Concat(strBytes).ToArray();
         }
