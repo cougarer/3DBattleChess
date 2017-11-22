@@ -4,10 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MasterServer
+[Serializable]
+public class PlayerData
 {
-    class PlayerData
+    public int score = 0;
+    public PlayerData()
     {
-
+        score = 100;
     }
 }
+

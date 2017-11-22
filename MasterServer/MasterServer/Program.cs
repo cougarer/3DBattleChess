@@ -6,15 +6,9 @@ using System.Threading.Tasks;
 
 namespace MasterServer
 {
-    class HandlePlayerEvent
+    class Program
     {
-        //上线
-        public void OnLogin(Player player)
-        {
-
-        }
-
-        public void OnLogout(Player player)
+        static void Main(string[] args)
         {
 
         }

@@ -1,0 +1,2 @@
+C:\Users\rjxy\Documents\GitHub\3DBattleChess\MasterServer\MasterServer\bin\Debug\MasterServer.exe.config
+C:\Users\rjxy\Documents\GitHub\3DBattleChess\MasterServer\MasterServer\obj\Debug\MasterServer.csprojResolveAssemblyReference.cache

@@ -4,10 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace MasterServer
+public class Player
 {
-    class PlayerTempData
-    {
+    public string id;
 
-    }
+    //连接类
+    //public Conn conn;
+
+    public PlayerData playerData; 
 }
