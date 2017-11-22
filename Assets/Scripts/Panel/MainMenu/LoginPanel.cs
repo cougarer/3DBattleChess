@@ -64,11 +64,14 @@ public class LoginPanel : PanelBase
         protocol.AddString(inputFieldName.text);
         protocol.AddString(inputFieldPwd.text);
 
-        Debug.Log("发送" + protocol.GetDesc());
+        int start = 0;
+        Debug.Log("发送消息" + protocol.GetString(start,ref start));
+        Debug.Log("发送消息" + protocol.GetString(start, ref start));
+        Debug.Log("发送消息" + protocol.GetString(start, ref start));
         NetMgr.srvConn.Send(protocol, OnLoginBack);
     }
 
-    public void OnLoginBack(ProtocolBase protocol)
+    private void OnLoginBack(ProtocolBase protocol)
     {
         ProtocolBytes proto = (ProtocolBytes)protocol;
         int start = 0;

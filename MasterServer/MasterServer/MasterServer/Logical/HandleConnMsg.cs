@@ -62,7 +62,7 @@ namespace MasterServer
             protocolRet.AddString("Login");
 
             //验证
-            //if(!DataMgr.Instance.CheckPassWord(id,pw))
+            //if(!DataMgr.Instance.CheckPassWord(id,pw)) 验证失败，返回-1，return
             //{
             //    protocolRet.AddInt(-1);
             //    conn.Send(protocolRet);
@@ -73,7 +73,7 @@ namespace MasterServer
             ProtocolBytes protocolLotout = new ProtocolBytes();
             protocolLotout.AddString("Logout");
             protocolLotout.AddInt(0);
-            if (!Player.KickOff(id, protocolLotout))
+            if (!Player.KickOff(id, protocolLotout))//如果踢人踢不了，就不让这个新登录的人登录
             {
                 protocolRet.AddInt(-1);
                 conn.Send(protocolRet);
@@ -95,7 +95,7 @@ namespace MasterServer
             //事件触发
             ConnMananger.Instance.handlerPlayerEvent.OnLogin(conn.player);
             //返回协议
-            protocolRet.AddInt(0);
+            protocolRet.AddInt(0);  //0为登录成功
             conn.Send(protocolRet);
         }
         //下线

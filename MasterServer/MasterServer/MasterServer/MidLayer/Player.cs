@@ -37,7 +37,7 @@ namespace MasterServer
                 if (conns[i] == null) continue;
                 if (!conns[i].IsUse) continue;
                 if (conns[i].player == null) continue;
-                if (conns[i].player.id == id)
+                if (conns[i].player.id == id)// 查找该id
                 {
                     lock (conns[i].player)
                     {
