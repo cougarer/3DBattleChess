@@ -147,7 +147,7 @@ public class DataMgr
     {
         //防sql注入
         if (!IsSafeStr(id) || !IsSafeStr(pw))
-            return;
+            return false;
 
         //查询
         string cmdStr = string.Format("select * from user where id='{0}' and pw='{1}';", id, pw);
@@ -191,7 +191,65 @@ public class DataMgr
                 dataReader.Read();
 
                 long len = dataReader.GetBytes(1, 0, null, 0, 0);   //1是data
+                buffer = new byte[len];
+                dataReader.GetBytes(1, 0, buffer, 0, (int)len);
             }
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("[DataMgr]GetPlayerData 查询 " + ex.Message);
+            return playerData;
+        }
+
+        //反序列化
+        MemoryStream stream = new MemoryStream(buffer);
+        try
+        {
+            BinaryFormatter formatter = new BinaryFormatter();
+            playerData = (PlayerData)formatter.Deserialize(stream);
+            return playerData;
+        }
+        catch (SerializationException ex)
+        {
+            Console.WriteLine("[DataMgr]GetPlayerData 反序列化 " + ex.Message);
+            return playerData;
+        }
+    }
+
+    public bool SavePlayer(Player player)
+    {
+        string id = player.id;
+        PlayerData playerData = player.data;
+
+        //序列化
+        IFormatter formatter = new BinaryFormatter();
+        MemoryStream stream = new MemoryStream();
+        try
+        {
+            formatter.Serialize(stream, playerData);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("[DataMgr]SavePlayer 序列化 " + ex.Message);
+            return false;
+        }
+        byte[] byteArr = stream.ToArray();
+
+        //写入数据库
+        string formaterStr = "update player set data = @data where id ='{0}';";
+        string cmdStr = string.Format(formaterStr, player.id);
+        MySqlCommand cmd = new MySqlCommand(cmdStr, sqlConn);
+        cmd.Parameters.Add("@data", MySqlDbType.Blob);
+        cmd.Parameters[0].Value = byteArr;
+        try
+        {
+            cmd.ExecuteNonQuery();
+            return true;
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("[DataMgr]SavePlayer 写入 " + ex.Message);
+            return false;
         }
     }
 }

@@ -8,8 +8,8 @@ public class Player
 {
     public string id;
 
-    //连接类
     //public Conn conn;
 
-    public PlayerData playerData; 
+    public PlayerData data;
+    public PlayerTempData tempData;
 }
