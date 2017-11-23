@@ -5,3 +5,5 @@ D:\githuLocalRepository\3DBattleChess\MasterServer\MasterServer\bin\Debug\Master
 D:\githuLocalRepository\3DBattleChess\MasterServer\MasterServer\obj\Debug\MasterServer.csprojResolveAssemblyReference.cache
 D:\githuLocalRepository\3DBattleChess\MasterServer\MasterServer\obj\Debug\MasterServer.exe
 D:\githuLocalRepository\3DBattleChess\MasterServer\MasterServer\obj\Debug\MasterServer.pdb
+C:\Users\rjxy\Documents\GitHub\3DBattleChess\MasterServer\MasterServer\bin\Debug\MasterServer.exe.config
+C:\Users\rjxy\Documents\GitHub\3DBattleChess\MasterServer\MasterServer\obj\Debug\MasterServer.exe

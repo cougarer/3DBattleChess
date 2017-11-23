@@ -1,4 +1,4 @@
-﻿using System;
+﻿ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
@@ -21,6 +21,9 @@ public class ServNet
 
     //最大连接数
     public int maxConn = 1024;
+
+    //协议
+    public ProtocolBase proto;
 
     //单例
     public static ServNet Instance;
@@ -190,10 +193,8 @@ public class ServNet
         }
 
         //处理消息
-        string str = Encoding.UTF8.GetString(conn.readBuff, sizeof(Int32), conn.msgLength);
-        Console.WriteLine("收到消息 [" + conn.GetAdress() + "] " + str);
-
-        
+        ProtocolBase protocol = proto.Decode(conn.readBuff, sizeof(Int32), conn.msgLength); 
+          
 
         //清除以处理完的信息
         int count = conn.buffCount - conn.msgLength - sizeof(Int32);
@@ -205,10 +206,27 @@ public class ServNet
         }
     }
 
-    //发送消息
-    public void Send(Conn conn, string str)
+    //处理消息
+    private void HandleMsg(Conn conn, ProtocolBase protoBase)
     {
-        byte[] bytes = Encoding.UTF8.GetBytes(str);
+        string name = protoBase.GetName();
+        Console.WriteLine("[收到协议]" + name);
+
+        //处理心跳
+        if (name == "HeartBeat")
+        {
+            Console.WriteLine("[更新心跳时间]" + conn.GetAdress());
+            conn.lastTickTime = Sys.GetTimeStamp();
+        }
+
+        //回射
+        Send(conn, protoBase);
+    }
+
+    //发送消息
+    public void Send(Conn conn, ProtocolBase protocol)
+    {
+        byte[] bytes = protocol.Encode();
         byte[] length = BitConverter.GetBytes(bytes.Length);
         byte[] sendBuff = length.Concat(bytes).ToArray();
 
@@ -218,7 +236,9 @@ public class ServNet
         }
         catch (Exception ex)
         {
-            Console.WriteLine("[发送消息]" + conn.GetAdress();+":"+ex.Message);
+            Console.WriteLine("[发送消息]" + conn.GetAdress()+":"+ex.Message);
         }
     }
+
+    public 
 }
