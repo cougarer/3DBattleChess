@@ -1,8 +1,9 @@
-﻿ using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Net.Sockets;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,6 +22,11 @@ public class ServNet
 
     //最大连接数
     public int maxConn = 1024;
+
+    //事件处理
+    public HandleConnMsg handleConnMsg = new HandleConnMsg();
+    public HandlePlayerEvent handlePlayerEvent = new HandlePlayerEvent();
+    public HandlePlayerMsg handlePlayerMsg = new HandlePlayerMsg();
 
     //协议
     public ProtocolBase proto;
@@ -60,7 +66,7 @@ public class ServNet
     {
         //处理心跳
         HeartBeat();
-        timer.Start();   //昨天晚上到这里
+        timer.Start();   
     }
 
     //心跳
@@ -130,7 +136,7 @@ public class ServNet
             }
             else
             {
-                Conn conn = conns[i];
+                Conn conn = conns[index];
                 conn.Init(socket);
                 string adr = conn.GetAdress();
                 Console.WriteLine("客户端连接 [" + adr + "] conn池ID：" + index);
@@ -193,8 +199,8 @@ public class ServNet
         }
 
         //处理消息
-        ProtocolBase protocol = proto.Decode(conn.readBuff, sizeof(Int32), conn.msgLength); 
-          
+        ProtocolBase protocol = proto.Decode(conn.readBuff, sizeof(Int32), conn.msgLength);
+        HandleMsg(conn, protocol);
 
         //清除以处理完的信息
         int count = conn.buffCount - conn.msgLength - sizeof(Int32);
@@ -210,17 +216,36 @@ public class ServNet
     private void HandleMsg(Conn conn, ProtocolBase protoBase)
     {
         string name = protoBase.GetName();
-        Console.WriteLine("[收到协议]" + name);
-
-        //处理心跳
-        if (name == "HeartBeat")
+        string methodName = "Msg" + name;
+        //连接协议分发
+        if (conn.player == null || name == "HeartBeat" || name == "Logout")
         {
-            Console.WriteLine("[更新心跳时间]" + conn.GetAdress());
-            conn.lastTickTime = Sys.GetTimeStamp();
-        }
+            MethodInfo mm = handleConnMsg.GetType().GetMethod(methodName);
+            if (mm == null)
+            {
+                string str = "[警告]HandleConnMsg没有处理连接方法";
+                Console.WriteLine(str + methodName);
+                return;
+            }
 
-        //回射
-        Send(conn, protoBase);
+            Object[] obj = new object[] { conn, protoBase };
+            Console.WriteLine("[处理连接消息]" + conn.GetAdress() + " :" + name);
+            mm.Invoke(handleConnMsg, obj);
+        }
+        //角色协议分发
+        else
+        {
+            MethodInfo mm = handlePlayerMsg.GetType().GetMethod(methodName);
+            if (mm == null)
+            {
+                string str = "[警告]HandlePlayerMsg没有处理玩家方法";
+                Console.WriteLine(str + methodName);
+                return;
+            }
+            Object[] obj = new object[] { conn.player, protoBase };
+            Console.WriteLine("[处理玩家消息]" + conn.player.id + " :" + name);
+            mm.Invoke(handlePlayerMsg, obj);
+        }
     }
 
     //发送消息
@@ -240,5 +265,16 @@ public class ServNet
         }
     }
 
-    public 
+    //广播
+    public void Broadcast(ProtocolBase protocol)
+    {
+        for (int i = 0; i < conns.Length; i++)
+        {
+            if (!conns[i].isUse)
+                continue;
+            if (conns[i].player == null)
+                continue;
+            Send(conns[i], protocol);
+        }
+    } 
 }
