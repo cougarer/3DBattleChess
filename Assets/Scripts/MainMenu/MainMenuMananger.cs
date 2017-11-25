@@ -13,4 +13,9 @@ public class MainMenuMananger : MonoBehaviour
     {
         PanelMgr.Instance.OpenPanel<LoginPanel>("");
     }
+
+    void Update()
+    {
+        NetMgr.Update();
+    }
 }

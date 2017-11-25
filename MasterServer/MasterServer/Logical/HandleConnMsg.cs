@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 
 public partial class HandleConnMsg
 {
+    #region 接收并返回
     //心跳
     //协议参数：无
 
@@ -106,13 +107,56 @@ public partial class HandleConnMsg
         return;
     }
 
+    //增加分数
+    //协议参数:
+    public void MsgAddScore(Player player, ProtocolBase protoBase)
+    {
+        //获取数值
+        int start = 0;
+        ProtocolBytes protocol = (ProtocolBytes)protoBase;
+        string protoName = protocol.GetString(start, ref start);
+
+        //处理
+        player.data.score += 1;
+        Console.WriteLine("MsgAddScore "+player.id+" "+player.data.score.ToString());
+    }
+
+    #endregion
+
+    #region 发送
+
     //下线
     //协议参数：
     //返回协议 0 正常下线
     //这个是服务器主动调用的，不牵扯到解析协议
     public void MsgLogout(Conn conn, ProtocolBase protoBase)
     {
-        
-
+        ProtocolBytes protocol = new ProtocolBytes();
+        protocol.AddString("Logout");
+        protocol.AddInt(0);
+        if (conn.player == null)
+        {
+            conn.Send(protocol);
+            conn.Close();
+        }
+        else
+        {
+            conn.player.Send(protocol);
+            conn.player.Logout();
+        }
     }
+
+    //获取分数
+    //协议参数：
+    //返回协议：int 分数
+    public void MsgGetScore(Player player, ProtocolBase protoBase)
+    {
+        ProtocolBytes protocolRet = new ProtocolBytes();
+        protocolRet.AddString("GetScore");
+        protocolRet.AddInt(player.data.score);
+        player.Send(protocolRet);
+        Console.WriteLine("MsgGetScore" + player.id + player.data.score);
+    }
+
+    #endregion
 }

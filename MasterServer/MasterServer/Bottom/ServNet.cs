@@ -276,5 +276,39 @@ public class ServNet
                 continue;
             Send(conns[i], protocol);
         }
-    } 
+    }
+
+    //打印信息
+    public void Print()
+    {
+        Console.WriteLine("===服务器登录信息===");
+        for (int i = 0; i < conns.Length; i++)
+        {
+            if (conns[i] == null)
+                continue;
+            if (!conns[i].isUse)
+                continue;
+
+            string str = "连接 [" + conns[i].GetAdress() + "] ";
+            if (conns[i].player != null)
+                str += "玩家 id " + conns[i].player.id;
+
+            Console.WriteLine(str);
+        }
+    }
+
+    //关闭
+    public void Close()
+    {
+        for (int i = 0; i < conns.Length; i++)
+        {
+            Conn conn = conns[i];
+            if (conn == null) continue;
+            if (!conn.isUse) continue;
+            lock (conn)
+            {
+                conn.Close();
+            }
+        }
+    }
 }
