@@ -37,7 +37,7 @@ public class LoginPanel : PanelBase
     #region 按钮监听
     public void OnRegClick()
     {
-        //PanelMgr.Instance.OpenPanel<RegPanel>("");
+        PanelMgr.Instance.OpenPanel<RegisterPanel>("");
         Close();
     }
 
@@ -71,6 +71,9 @@ public class LoginPanel : PanelBase
         NetMgr.srvConn.Send(protocol, OnLoginBack);
     }
 
+    #endregion
+
+    #region 网络监听
     private void OnLoginBack(ProtocolBase protocol)
     {
         ProtocolBytes proto = (ProtocolBytes)protocol;
@@ -90,6 +93,5 @@ public class LoginPanel : PanelBase
             Debug.Log("登录失败");
         }
     }
-
     #endregion
 }
