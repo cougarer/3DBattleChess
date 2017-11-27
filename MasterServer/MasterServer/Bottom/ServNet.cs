@@ -72,7 +72,7 @@ public class ServNet
     //心跳
     public void HeartBeat()
     {
-        Console.WriteLine("[主定时器执行]");
+        //Console.WriteLine("[主定时器执行]");
         long timeNow = Sys.GetTimeStamp();
 
         for (int i = 0; i < conns.Length; i++)
