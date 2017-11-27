@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.UI;
+using UI.Panel;
 
 //Author: MaxLykoS
 //UpdateTime: 2017/11/7

@@ -15,6 +15,9 @@ public class LobbyServer
     //房主对手名字
     public string HostOpponent;
 
+    public int WinTimes;
+    public int FailTimes;
+
     //观众
     public List<string> SpectList = new List<string>();
 

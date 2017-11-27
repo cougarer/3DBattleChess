@@ -2,6 +2,9 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UI.Panel;
+using UI.Tip;
+using System.Text.RegularExpressions;
 
 public class RegisterPanel : PanelBase
 {
@@ -33,7 +36,7 @@ public class RegisterPanel : PanelBase
         btnReg = skinTrans.Find("BtnReg").GetComponent<Button>();
         btnBackToLoginPanel = skinTrans.Find("BtnBackToLoginPanel").GetComponent<Button>();
 
-        textPwdStrength.text = "密码强度：弱";
+        textPwdStrength.text = "";
         btnReg.onClick.AddListener(BtnReg);
         btnBackToLoginPanel.onClick.AddListener(BtnBackToLoginPanel);
         inputFieldPwd.onValueChanged.AddListener(OnPwdChange);
@@ -43,15 +46,21 @@ public class RegisterPanel : PanelBase
     #region 按钮监听
     private void BtnReg()
     {
-        if (inputFieldPwd.text != inputFieldPwdCheck.text)
+        if (!isLegal)
         {
-            Debug.Log("两次输入密码不一致！");
+            PanelMgr.Instance.OpenPanel<WarningTip>("", "密码不符合要求！");
             return;
         }
 
-        if (inputFieldName.text == "" && inputFieldPwd.text == "")
+        if (inputFieldName.text == "" || inputFieldPwd.text == "")
         {
-            Debug.Log("用户名密码不能为空！");
+            PanelMgr.Instance.OpenPanel<WarningTip>("", "用户名密码不能为空！");
+            return;
+        }
+
+        if (inputFieldPwd.text != inputFieldPwdCheck.text)
+        {
+            PanelMgr.Instance.OpenPanel<WarningTip>("", "两次密码输入不一致！");
             return;
         }
 
@@ -72,28 +81,88 @@ public class RegisterPanel : PanelBase
         NetMgr.srvConn.Send(protocol, OnRegBack);
     }
 
+    private bool isLegal;
     private void OnPwdChange(string pwd)
     {
-        /*int pwdStrength = 0;
+        #region 密码不能为空
+        if (pwd == "")
+        {
+            textPwdStrength.text = "";
+            return;
+        }
+        #endregion
+
+        #region 密码不能过长
+        if (pwd.Length > 8)
+        {
+            isLegal = false;
+            textPwdStrength.text = "密码最长为8位！";
+            return;
+        }
+        #endregion
+
         bool isC = false, isc = false, isnum = false;
+        isLegal =true;
+
+        int pwdStrength = 0;
+
+        #region 判断密码强度
         foreach (char c in pwd)
         {
-            if (!isC && 大写) { pwdStrength++; isC = true; }
-            if (!isc && 小写) { pwdStrength++; isc = true; }
-            if (!isnum&&数字) { pwdStrength++;isnum = true; }
+            string str = c.ToString();
+            #region 包含大写
+            if (Regex.IsMatch(str, "[A-Z]"))
+            {
+                if (!isC)
+                {
+                    pwdStrength++;
+                    isC = true;
+                }
+            }
+            #endregion
+            #region 包含小写
+            else if (Regex.IsMatch(str, "[a-z]"))
+            {
+                if (!isc)
+                { 
+                    pwdStrength++;
+                    isc = true;
+                }
+            }
+            #endregion
+            #region 包含数字
+            else if (Regex.IsMatch(str, "[0-9]"))
+            {
+                if (!isnum)
+                {
+                    pwdStrength++;
+                    isnum = true;
+                }
+            }
+            #endregion
+            #region 包含非法字符
+            else
+                isLegal = false;
+            #endregion
         }
+        #endregion
 
+        if (!isLegal)
+        {
+            textPwdStrength.text = "含有非法字符";
+            return;
+        }
+        #region 密码强度判断
         switch (pwdStrength)
         {
-            case 0:
-                textPwdStrength.text = "密码强度：弱";break;
             case 1:
                 textPwdStrength.text = "密码强度：弱"; break;
             case 2:
                 textPwdStrength.text = "密码强度：中"; break;
             case 3:
                 textPwdStrength.text = "密码强度：强"; break;
-        }*/
+        }
+        #endregion
     }
 
     private void BtnBackToLoginPanel()
@@ -104,6 +173,7 @@ public class RegisterPanel : PanelBase
     #endregion
 
     #region 网络监听
+
     private void OnRegBack(ProtocolBase protocol)
     {
         ProtocolBytes proto = (ProtocolBytes)protocol;
@@ -121,5 +191,6 @@ public class RegisterPanel : PanelBase
             Debug.Log("注册失败!");
         }
     }
+
     #endregion
 }

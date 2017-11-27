@@ -64,6 +64,8 @@ public class Lobby
             protocol.AddString(server.ServerDesc);
             protocol.AddString(server.HostName);
             protocol.AddString(server.HostOpponent);
+            protocol.AddInt(server.WinTimes);
+            protocol.AddInt(server.FailTimes);
             foreach (string serverDesc in server.SpectList)
             {
                 protocol.AddString(serverDesc);
