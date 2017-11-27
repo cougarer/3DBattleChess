@@ -11,6 +11,7 @@ namespace MasterServer
         static void Main(string[] args)
         {
             DataMgr dataMgr = new DataMgr();
+            Lobby lobby = new Lobby();
 
             ServNet servNet = new ServNet();
             servNet.proto = new ProtocolBytes();   //使用ProtocolBytes,字节流协议传输信息
