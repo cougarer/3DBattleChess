@@ -12,11 +12,13 @@ public class MainMenuMananger : MonoBehaviour
 {
     void Start()
     {
-        PanelMgr.Instance.OpenPanel<LoginPanel>("");
+        Application.runInBackground = true;
+        //PanelMgr.Instance.OpenPanel<LoginPanel>("");
+        PanelMgr.Instance.OpenPanel<MenuButtonsPanel>("");
     }
 
     void Update()
     {
-        NetMgr.Update();
+        NetMgr.Update();//消息监听
     }
 }

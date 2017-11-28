@@ -13,6 +13,8 @@ namespace UI.Panel
         private Button btnBackToMenu;
         private Transform ServerContent;
 
+        private GameObject prefabServer;
+
         #region 生命周期
         public override void Init(params object[] args)
         {
@@ -31,6 +33,7 @@ namespace UI.Panel
             btnJoin = skinTrans.Find("BtnJoin").GetComponent<Button>();
             btnBackToMenu = skinTrans.Find("BtnBackToMenu").GetComponent<Button>();
             ServerContent = skinTrans.Find("Scroll View/Viewport/Content");
+            prefabServer = Resources.Load<GameObject>("");
 
             btnHostGame.onClick.AddListener(BtnHostGame);
             btnRefresh.onClick.AddListener(BtnRefresh);
@@ -50,6 +53,9 @@ namespace UI.Panel
         }
         private void BtnRefresh()
         {
+            ProtocolBytes protocol = new ProtocolBytes();
+            protocol.AddString("GetList");
+            NetMgr.srvConn.Send(protocol, RecvGetServerList);
             Debug.Log("Refresh");
         }
         private void BtnJoin()
@@ -61,6 +67,20 @@ namespace UI.Panel
         {
             PanelMgr.Instance.OpenPanel<MenuButtonsPanel>("");
             Close();
+        }
+        #endregion
+
+        #region 网络监听
+        private void RecvGetServerList(ProtocolBase protocol)
+        {
+
+        }
+        #endregion
+
+        #region 其他辅助函数
+        private void ClearServerList()
+        {
+
         }
         #endregion
     }

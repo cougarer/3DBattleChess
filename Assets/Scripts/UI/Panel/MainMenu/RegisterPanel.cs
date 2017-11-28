@@ -69,7 +69,11 @@ public class RegisterPanel : PanelBase
             string host = "127.0.0.1";
             int port = 1234;
             NetMgr.srvConn.proto = new ProtocolBytes();
-            NetMgr.srvConn.Connect(host, port);
+            if (NetMgr.srvConn.Connect(host, port))
+            {
+                PanelMgr.Instance.OpenPanel<WarningTip>("", "连接服务器失败！");
+                return;
+            }
         }
 
         //发送注册信息
@@ -189,6 +193,7 @@ public class RegisterPanel : PanelBase
         else
         {
             Debug.Log("注册失败!");
+            PanelMgr.Instance.OpenPanel<WarningTip>("", "注册失败，请更换用户名");
         }
     }
 
