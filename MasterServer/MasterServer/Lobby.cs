@@ -59,18 +59,23 @@ public class Lobby
     {
         foreach (LobbyServer server in serverDic.Values)
         {
-            ProtocolBytes protocol = new ProtocolBytes();
+            /*ProtocolBytes protocol = new ProtocolBytes();
             protocol.AddString("GetServerList");
             protocol.AddString(server.ServerDesc);
             protocol.AddString(server.HostName);
-            protocol.AddString(server.HostOpponent);
-            protocol.AddInt(server.WinTimes);
-            protocol.AddInt(server.FailTimes);
-            foreach (string serverDesc in server.SpectList)
-            {
-                protocol.AddString(serverDesc);
-            }
-            player.Send(protocol);
+            player.Send(protocol);*/
+
         }
+
+        for (int i = 0; i < 1000; i++)//这里注意删除
+        {//这里注意删除
+            ProtocolBytes protocol = new ProtocolBytes();      //这里注意删除
+            protocol.AddString("GetServerList");       //这里注意删除
+            protocol.AddString("You r not prepared!"+i.ToString());      //这里注意删除
+            protocol.AddString("MaxLykoS"+i.ToString());       //这里注意删除
+            player.Send(protocol);     //这里注意删除
+        }//这里注意删除
+
+
     }
 }

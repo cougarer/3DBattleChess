@@ -98,7 +98,7 @@ public class Connection
         lock (msgQueue)
             msgQueue.Enqueue(protocol);
 
-        //清楚已处理的消息
+        //清除已处理的消息
         int count = buffCount - msgLength - sizeof(Int32);
         Array.Copy(readBuff, msgLength + sizeof(Int32), readBuff, 0, count);
         buffCount = count;

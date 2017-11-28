@@ -12,14 +12,9 @@ public class LobbyServer
     //房主名字
     public string HostName;  //根据房主名字确定房间ID
 
-    //房主对手名字
-    public string HostOpponent;
 
-    public int WinTimes;
-    public int FailTimes;
-
-    //观众
-    public List<string> SpectList = new List<string>();
+    public int HostWinTimes;
+    public int HostFailTimes;
 
     public LobbyServer(string hostName)
     {
