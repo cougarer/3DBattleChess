@@ -7,10 +7,12 @@ using System.Threading.Tasks;
 [Serializable]
 public class PlayerData
 {
-    public int score = 0;
+    public int WinTimes;
+    public int FailTimes;
+
     public PlayerData()
     {
-        score = 100;
+        
     }
 }
 

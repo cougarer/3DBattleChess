@@ -76,10 +76,15 @@ public class PanelMgr : Singletion<PanelMgr>
     }
 
     //关闭面板
+    //注意，name是该UI类的反射名，注意前面的命名空间，嵌套类记得写+号！
     public void ClosePanel(string name)
     {
-        PanelBase panel = (PanelBase)dict[name];
-        if (panel == null)
+        PanelBase panel;
+        if (dict.ContainsKey(name))
+        {
+            panel = dict[name];
+        }
+        else
             return;
 
         panel.OnClosing();

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UI.Tip;
 
 namespace UI.Panel
 {
@@ -10,6 +11,8 @@ namespace UI.Panel
         private Button btnHostGame;
         private Button btnBackToLobby;
         private Transform MapContent;
+
+        private string MapName;
 
         #region 生命周期
         public override void Init(params object[] args)
@@ -42,6 +45,43 @@ namespace UI.Panel
 
         #endregion
 
+        #region 按钮监听
+        private void BtnHostGame()
+        {
+            if (MapName == null)
+            {
+                PanelMgr.Instance.OpenPanel<WarningTip>("","请选择地图！");
+                return;
+            }
+
+            ProtocolBytes protocol = new ProtocolBytes();
+            protocol.AddString("CreateServer");
+            protocol.AddString(MapName);
+            NetMgr.srvConn.Send(protocol, RecvCreateServer);
+        }
+
+        private void BtnBackToLobbyPanel()
+        {
+            PanelMgr.Instance.OpenPanel<LobbyPanel>("");
+            Close();
+        }
+
+        private void BtnChooseMap(string name)
+        {
+            MapName = name;
+            Debug.Log(name);
+        }
+        #endregion
+
+        #region 网络监听
+        private void RecvCreateServer(ProtocolBase protocol)
+        {
+            PanelMgr.Instance.OpenPanel<RoomPanel>("");
+            Close();
+        }
+        #endregion
+
+        #region 辅助方法
         private void LoadMap()
         {
             //加载本地地图
@@ -59,24 +99,6 @@ namespace UI.Panel
                 go.GetComponent<Button>().onClick.AddListener(delegate () { BtnChooseMap(levelName); });//关卡名
                 go.transform.SetParent(MapContent);
             }
-        }
-
-        #region 按钮监听
-        private void BtnHostGame()
-        {
-            PanelMgr.Instance.OpenPanel<RoomPanel>("");
-            Close();
-        }
-
-        private void BtnBackToLobbyPanel()
-        {
-            PanelMgr.Instance.OpenPanel<LobbyPanel>("");
-            Close();
-        }
-
-        private void BtnChooseMap(string name)
-        {
-            Debug.Log(name);
         }
         #endregion
     }

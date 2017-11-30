@@ -40,9 +40,17 @@ namespace UI.Panel
             btnJoin.onClick.AddListener(BtnJoin);
             btnBackToMenu.onClick.AddListener(BtnBackToMenu);
         }
+
+        public override void OnClosing()
+        {
+            base.OnClosing();
+
+            NetMgr.srvConn.msgDist.DelListener("GetServerList", RecvGetServerList);    //将刷新监听的方法删除
+        }
         #endregion
 
         #region 按钮监听
+
         private void BtnHostGame()
         {
             PanelMgr.Instance.OpenPanel<HostPanel>("");
@@ -53,10 +61,7 @@ namespace UI.Panel
         {
             ClearServerList();
 
-            NetMgr.srvConn.proto = new ProtocolBytes();
-            NetMgr.srvConn.Connect("127.0.0.1", 1234);   //这里注意删除
-
-            NetMgr.srvConn.msgDist.AddListener("GetServerList",RecvGetServerList);
+            NetMgr.srvConn.msgDist.AddListener("GetServerList",RecvGetServerList);   //监听刷新事件
 
             ProtocolBytes protocol = new ProtocolBytes();
             protocol.AddString("GetServerList");
@@ -106,8 +111,7 @@ namespace UI.Panel
             int protoWinTimes = proto.GetInt(start, ref start);   //胜利次数
             int protoFailTimes = proto.GetInt(start, ref start);   //失败次数
 
-            Debug.Log(protoHostName); Debug.Log(protoWinTimes); Debug.Log(protoFailTimes);
-
+            PanelMgr.Instance.ClosePanel("UI.Panel.LobbyPanel+AchieveTip");
             PanelMgr.Instance.OpenPanel<AchieveTip>("", protoHostName, protoHostMapName, protoWinTimes.ToString(), protoFailTimes.ToString());
         }
         #endregion
