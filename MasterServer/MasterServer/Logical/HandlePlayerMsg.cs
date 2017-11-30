@@ -15,6 +15,10 @@ public partial class HandlePlayerMsg
 
     public void MsgGetAchieve(Player player, ProtocolBase protoBase)
     {
-
+        ProtocolBytes protocol = (ProtocolBytes)protoBase;
+        int start = 0;
+        protocol.GetString(start, ref start);
+        string protoHostName = protocol.GetString(start, ref start);
+        Lobby.Instance.SendHostAchieve(player, protoHostName);
     }
 }

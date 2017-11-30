@@ -12,6 +12,11 @@ public class LobbyServer
     //房主名字
     public string HostName;  //根据房主名字确定房间ID
 
+    //地图
+    public string HostMapName;
+
+    //房间人数状态
+    public int ServerStatus;
 
     public int HostWinTimes;
     public int HostFailTimes;

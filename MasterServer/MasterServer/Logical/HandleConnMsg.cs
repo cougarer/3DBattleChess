@@ -99,7 +99,7 @@ public partial class HandleConnMsg
         conn.player.data = playerData;//将玩家数据与连接的玩家数据绑定
 
         //事件触发
-        ServNet.Instance.handlePlayerEvent.OnLogout(conn.player);
+        ServNet.Instance.handlePlayerEvent.OnLogin(conn.player);
 
         //返回成功协议
         protocolRet.AddInt(0);
