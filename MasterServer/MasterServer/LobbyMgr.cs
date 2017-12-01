@@ -25,11 +25,12 @@ public class LobbyMgr
     }
 
     //添加服务器
-    public void AddServer(string hostName)
+    public void AddServer(Player player,string serverDesc)
     {
+        string hostName = player.id;
         lock (serverDic)
         {
-            LobbyServer server = new LobbyServer(hostName);
+            LobbyServer server = new LobbyServer(player,serverDesc);
             serverDic[hostName] = server;
         }
     }

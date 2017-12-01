@@ -57,6 +57,7 @@ namespace UI.Panel
             ProtocolBytes protocol = new ProtocolBytes();
             protocol.AddString("CreateServer");
             protocol.AddString(MapName);
+            protocol.AddString("Map Desc");
             NetMgr.srvConn.Send(protocol, RecvCreateServer);
         }
 
@@ -74,11 +75,13 @@ namespace UI.Panel
         #endregion
 
         #region 网络监听
+
         private void RecvCreateServer(ProtocolBase protocol)
         {
             PanelMgr.Instance.OpenPanel<RoomPanel>("");
             Close();
         }
+
         #endregion
 
         #region 辅助方法

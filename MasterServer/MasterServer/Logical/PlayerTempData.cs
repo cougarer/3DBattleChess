@@ -9,17 +9,29 @@ public class PlayerTempData
     public Status status;
     public enum Status
     {
-        Nonde,
+        None,
         Prepare,
         Fighting,
     }
 
     public LobbyServer server;
 
+    public string MapName;
+
     public bool isHost;
 
     public PlayerTempData()
     {
         isHost = false;
+
+        status = Status.None;
+    }
+
+    public void Init()
+    {
+        isHost = false;
+        status = Status.None;
+        MapName = null;
+        server = null;
     }
 }

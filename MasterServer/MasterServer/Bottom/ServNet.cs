@@ -236,7 +236,7 @@ public class ServNet
         //角色协议分发
         else
         {
-            conn.player = new Player("asd",conn);  //注意删除这个
+            conn.player = new Player("MaxLykoS",conn);  //注意删除这个
             MethodInfo mm = handlePlayerMsg.GetType().GetMethod(methodName);
             if (mm == null)
             {

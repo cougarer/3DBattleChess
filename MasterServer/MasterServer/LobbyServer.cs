@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 
 public class LobbyServer
 {
+    public const int MaxPlayer = 2;
+
     //服务器名
     public string ServerDesc;
 
@@ -23,8 +25,6 @@ public class LobbyServer
     //房间人数状态
     public int ServerStatus;
 
-    public const int MaxPlayer = 2;
-
     public Dictionary<string, Player> playerDic = new Dictionary<string, Player>();
 
     public enum Status
@@ -33,11 +33,17 @@ public class LobbyServer
         Fight,
     }
 
-    public LobbyServer(string hostName)
+    public LobbyServer(Player hostPlayer,string serverDesc)
     {
-        id = hostName;
+        ServerDesc = serverDesc;
+
+        id = hostPlayer.id;
+
+        HostMapName = hostPlayer.tempData.MapName;
 
         ServerStatus = (int)Status.Prepare;
+
+        playerDic[id] = hostPlayer;
     }
 
     //增加玩家
@@ -63,12 +69,14 @@ public class LobbyServer
     //删除玩家
     public void DelPlayer(string id)
     {
+        Player player;
         lock (playerDic)
         {
-            if (!playerDic.ContainsKey(id))
-                return;
-
-
+            if (playerDic.TryGetValue(id, out player))
+            {
+                player.tempData.Init();
+                playerDic.Remove(id);
+            }
         }
     }
 }
