@@ -57,6 +57,7 @@ namespace UI.Panel
 
             Close();
         }
+
         private void BtnRefresh()
         {
             ClearServerList();
@@ -68,6 +69,7 @@ namespace UI.Panel
             NetMgr.srvConn.Send(protocol);
             Debug.Log("Refresh");
         }
+
         private void BtnJoin()
         {
             Debug.Log("Join");

@@ -12,6 +12,8 @@ namespace UI.Panel
         private Button btnBackToLobby;
         private Transform MapContent;
 
+        private Button btnServerOption;
+
         private string MapName;
 
         #region 生命周期
@@ -31,6 +33,7 @@ namespace UI.Panel
             btnHostGame = skinTrans.Find("BtnHostGame").GetComponent<Button>();
             btnBackToLobby = skinTrans.Find("BtnBackToLobby").GetComponent<Button>();
             MapContent = skinTrans.Find("Scroll View/Viewport/Content");
+            btnServerOption = skinTrans.Find("BtnServerOption").GetComponent<Button>();
 
             btnHostGame.onClick.AddListener(BtnHostGame);
             btnBackToLobby.onClick.AddListener(BtnBackToLobbyPanel);
@@ -71,6 +74,12 @@ namespace UI.Panel
         {
             MapName = name;
             Debug.Log(name);
+        }
+
+        private void BtnServerOption()
+        {
+            PanelMgr.Instance.OpenPanel<ServerOptionPanel>("");
+            Close();
         }
         #endregion
 
