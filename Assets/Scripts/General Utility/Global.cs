@@ -21,14 +21,20 @@ public class Global : MonoBehaviour {
                 if (GlobalSingletionRoot == null)
                 {
                     GlobalSingletionRoot = GameObject.Find(rootName);
-                    if (GlobalSingletionRoot == null) Debug.Log("please create a gameobject named " + rootName);
+                    if (GlobalSingletionRoot == null)
+                    {
+                        Debug.Log("创建Global根物体:" + rootName);
+                        GlobalSingletionRoot = new GameObject(rootName);
+                    }
                 }
                 if (instance == null)
                 {
+                    
                     instance = GlobalSingletionRoot.GetComponent<Global>();
                     if (instance == null)
                     {
                         instance = GlobalSingletionRoot.AddComponent<Global>();
+                        instance.Init();
                         isCreated = true;
                     }
                 }
@@ -45,17 +51,19 @@ public class Global : MonoBehaviour {
     public GameInfo gameInfo;
 
 
-    void Start ()
+    private void Init()
     {
         DontDestroyOnLoad(gameObject);
 
         InitComponent();
-
     }
 
     private void InitComponent()
     {
         soundManager = gameObject.AddComponent<SoundManager>();
+
         gameInfo = new GameInfo();
+        gameInfo.Init();
+
     }
 }

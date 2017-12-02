@@ -15,8 +15,8 @@ public class MainMenuMananger : MonoBehaviour
         Application.runInBackground = true;
         //PanelMgr.Instance.OpenPanel<LoginPanel>("");
 
-        NetMgr.srvConn.proto = new ProtocolBytes();
-        NetMgr.srvConn.Connect("127.0.0.1",1234);
+        NetMgr.srvConn.proto = new ProtocolBytes();   //注意删除这个
+        NetMgr.srvConn.Connect("127.0.0.1",1234);  //注意删除这个
 
         PanelMgr.Instance.OpenPanel<MenuButtonsPanel>("");
     }

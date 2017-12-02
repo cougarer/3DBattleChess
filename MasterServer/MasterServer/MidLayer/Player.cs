@@ -60,8 +60,8 @@ public class Player
         //事件处理
         ServNet.Instance.handlePlayerEvent.OnLogout(this);
         //保存
-        if (!DataMgr.Instance.SavePlayer(this))
-            return false;
+        /*if (!DataMgr.Instance.SavePlayer(this))
+            return false;*/
 
         //下线
         conn.player = null;

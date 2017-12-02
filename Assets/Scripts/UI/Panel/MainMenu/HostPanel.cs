@@ -37,6 +37,7 @@ namespace UI.Panel
 
             btnHostGame.onClick.AddListener(BtnHostGame);
             btnBackToLobby.onClick.AddListener(BtnBackToLobbyPanel);
+            btnServerOption.onClick.AddListener(OnBtnServerOption);
         }
 
         public override void OnShowed()
@@ -49,6 +50,13 @@ namespace UI.Panel
         #endregion
 
         #region 按钮监听
+        private void OnBtnServerOption()
+        {
+            PanelMgr.Instance.OpenPanel<ServerOptionPanel>("");
+
+            Close();
+        }
+
         private void BtnHostGame()
         {
             if (MapName == null)
@@ -60,7 +68,7 @@ namespace UI.Panel
             ProtocolBytes protocol = new ProtocolBytes();
             protocol.AddString("CreateServer");
             protocol.AddString(MapName);
-            protocol.AddString("Map Desc");
+            protocol.AddString(Global.Instance.gameInfo.serverOptionInfo.ServerDesc);
             NetMgr.srvConn.Send(protocol, RecvCreateServer);
         }
 
@@ -96,10 +104,11 @@ namespace UI.Panel
         #region 辅助方法
         private void LoadMap()
         {
-            //加载本地地图
-            GameObject go = Instantiate(Resources.Load<GameObject>("Prefabs/Lobby/LevelTag"));
+            GameObject prefab = Resources.Load<GameObject>("Prefabs/Lobby/LevelTag");
+            //加载内置地图
             foreach (string levelName in MapLoader.LevelDic.Keys)
             {
+                GameObject go = Instantiate(prefab);
                 go.transform.GetComponentInChildren<Text>().text = levelName;    //关卡名
                 go.GetComponent<Button>().onClick.AddListener(delegate () { BtnChooseMap(levelName); });//关卡名
                 go.transform.SetParent(MapContent);
@@ -107,6 +116,7 @@ namespace UI.Panel
             //加载第三方地图
             foreach (string levelName in MapLoader.CustomLevelDic.Keys)
             {
+                GameObject go = Instantiate(prefab);
                 go.transform.GetComponentInChildren<Text>().text = levelName;    //关卡名
                 go.GetComponent<Button>().onClick.AddListener(delegate () { BtnChooseMap(levelName); });//关卡名
                 go.transform.SetParent(MapContent);

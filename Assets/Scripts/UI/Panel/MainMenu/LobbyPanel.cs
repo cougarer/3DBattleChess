@@ -96,7 +96,7 @@ namespace UI.Panel
             //解析协议
             ProtocolBytes proto = (ProtocolBytes)protocol;
             int start = 0;
-            string protoName = proto.GetString(start, ref start);   //“GetServerList”
+            proto.GetString(start, ref start);   //“GetServerList”
             string protoDesc = proto.GetString(start, ref start);   //服务器描述
             string protoHostName = proto.GetString(start, ref start);//服务器房主名字
             int protoServerStatus = proto.GetInt(start, ref start);  //服务器人数状态
@@ -107,7 +107,7 @@ namespace UI.Panel
         {
             ProtocolBytes proto = (ProtocolBytes)protocol;
             int start = 0;
-            string protoName = proto.GetString(start, ref start);   //"GetAchieve"
+            proto.GetString(start, ref start);   //"GetAchieve"
             string protoHostName = proto.GetString(start, ref start);   //服务器房主名字
             string protoHostMapName = proto.GetString(start, ref start);  //服务器地图
             int protoWinTimes = proto.GetInt(start, ref start);   //胜利次数

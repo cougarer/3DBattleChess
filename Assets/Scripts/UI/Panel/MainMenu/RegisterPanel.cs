@@ -182,7 +182,7 @@ public class RegisterPanel : PanelBase
     {
         ProtocolBytes proto = (ProtocolBytes)protocol;
         int start = 0;
-        string protoName = proto.GetString(start, ref start);
+        proto.GetString(start, ref start);
         int ret = proto.GetInt(start, ref start);
         if (ret == 0)
         {

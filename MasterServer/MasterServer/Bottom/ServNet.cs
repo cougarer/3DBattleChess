@@ -141,6 +141,7 @@ public class ServNet
                 string adr = conn.GetAdress();
                 Console.WriteLine("客户端连接 [" + adr + "] conn池ID：" + index);
                 conn.socket.BeginReceive(conn.readBuff, conn.buffCount, conn.BuffRemain(), SocketFlags.None, ReceiveCb, conn);
+
                 listenfd.BeginAccept(AcceptCb, null);
             }
         }

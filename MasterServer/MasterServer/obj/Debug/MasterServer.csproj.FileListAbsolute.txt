@@ -13,3 +13,9 @@ C:\Users\rjxy\Documents\GitHub\3DBattleChess\MasterServer\MasterServer\bin\Debug
 C:\Users\rjxy\Documents\GitHub\3DBattleChess\MasterServer\MasterServer\obj\Debug\MasterServer.csprojResolveAssemblyReference.cache
 C:\Users\rjxy\Documents\GitHub\3DBattleChess\MasterServer\MasterServer\obj\Debug\MasterServer.pdb
 D:\githuLocalRepository\3DBattleChess\MasterServer\MasterServer\bin\Debug\MySql.Data.dll
+D:\Github\3DBattleChess\MasterServer\MasterServer\bin\Debug\MasterServer.exe.config
+D:\Github\3DBattleChess\MasterServer\MasterServer\obj\Debug\MasterServer.exe
+D:\Github\3DBattleChess\MasterServer\MasterServer\obj\Debug\MasterServer.pdb
+D:\Github\3DBattleChess\MasterServer\MasterServer\bin\Debug\MasterServer.exe
+D:\Github\3DBattleChess\MasterServer\MasterServer\bin\Debug\MasterServer.pdb
+D:\Github\3DBattleChess\MasterServer\MasterServer\obj\Debug\MasterServer.csprojResolveAssemblyReference.cache

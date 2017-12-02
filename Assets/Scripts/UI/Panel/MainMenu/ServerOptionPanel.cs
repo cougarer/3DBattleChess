@@ -35,11 +35,21 @@ namespace UI.Panel
             btnClose.onClick.AddListener(OnBtnClose);
             btnAck.onClick.AddListener(OnBtnAck);
         }
+
+        public override void OnShowed()
+        {
+            base.OnShowed();
+
+            inputFieldServerDesc.text = 
+                Global.Instance.gameInfo.serverOptionInfo.ServerDesc;
+        }
         #endregion
 
         #region 按钮监听
         private void OnBtnClose()
         {
+            PanelMgr.Instance.OpenPanel<HostPanel>("");
+
             Close();
         }
 
@@ -47,6 +57,8 @@ namespace UI.Panel
         {
             //保存参数
             SaveServerOption();
+
+            PanelMgr.Instance.OpenPanel<HostPanel>("");
 
             Close();
         }
@@ -56,10 +68,11 @@ namespace UI.Panel
 
         private void SaveServerOption()
         {
-            ServerOptionInfo optionInfo = new ServerOptionInfo();
+            ServerOptionInfo optionInfo = Global.Instance.gameInfo.serverOptionInfo;
+
             optionInfo.ServerDesc = inputFieldServerDesc.text;
 
-            Global.Instance.gameInfo.serverOptionInfo = optionInfo;
+            Close();
         }
 
         #endregion

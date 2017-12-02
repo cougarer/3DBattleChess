@@ -12,8 +12,8 @@ namespace UI.Panel
     {
         private Button btnLobby;
         private Button btnMapEditor;
-        private Button optionBtn;
-        private Button quitBtn;
+        private Button btnOptions;
+        private Button btnQuit;
 
         #region 生命周期
         public override void Init(params object[] args)
@@ -29,13 +29,13 @@ namespace UI.Panel
             Transform skinTrans = skin.transform;
             btnLobby = skinTrans.Find("BtnLobby").GetComponent<Button>();
             btnMapEditor = skinTrans.Find("BtnMapEditor").GetComponent<Button>();
-            optionBtn = skinTrans.Find("BtnMapEditor").GetComponent<Button>();
-            quitBtn = skinTrans.Find("BtnMapEditor").GetComponent<Button>();
+            btnOptions = skinTrans.Find("BtnOptions").GetComponent<Button>();
+            btnQuit = skinTrans.Find("BtnQuit").GetComponent<Button>();
 
             btnLobby.onClick.AddListener(BtnLobby);
             btnMapEditor.onClick.AddListener(BtnMapEditor);
-            optionBtn.onClick.AddListener(BtnOption);
-            quitBtn.onClick.AddListener(BtnQuit);
+            btnOptions.onClick.AddListener(BtnOption);
+            btnQuit.onClick.AddListener(BtnQuit);
         }
         #endregion
 

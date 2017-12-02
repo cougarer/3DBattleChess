@@ -6,4 +6,9 @@ using UnityEngine;
 public class ServerOptionInfo
 {
     public string ServerDesc;
+
+    public void Init()
+    {
+        ServerDesc = "BattleChess Game Server";
+    }
 }

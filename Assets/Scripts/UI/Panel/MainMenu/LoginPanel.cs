@@ -78,7 +78,7 @@ namespace UI.Panel
         {
             ProtocolBytes proto = (ProtocolBytes)protocol;
             int start = 0;
-            string protoName = proto.GetString(start, ref start);   //昨晚在这里
+            proto.GetString(start, ref start);
             int ret = proto.GetInt(start, ref start);
             if (ret == 0)
             {
