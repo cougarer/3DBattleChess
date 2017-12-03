@@ -13,6 +13,9 @@ public partial class HandlePlayerMsg
         LobbyMgr.Instance.SendServerList(player);
     }
 
+    //得到身份资料
+    //参数 string GetAchieve
+    //     string 名字
     public void MsgGetAchieve(Player player, ProtocolBase protoBase)
     {
         ProtocolBytes protocol = (ProtocolBytes)protoBase;

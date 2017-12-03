@@ -47,6 +47,8 @@ public class LobbyMgr
             }
             else
             {
+                //房间内的其他玩家退出房间
+
                 serverDic.Remove(hostName);
             }
         }

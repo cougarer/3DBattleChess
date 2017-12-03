@@ -92,7 +92,7 @@ public class Connection
 
         //协议解码
         ProtocolBase protocol = proto.Decode(readBuff, sizeof(Int32), msgLength);
-        Debug.Log("收到消息" + protocol.GetDesc());
+        //Debug.Log("收到消息" + protocol.GetDesc());
 
         Queue<ProtocolBase> msgQueue = msgDist.MsgQueue;
         lock (msgQueue)
@@ -118,7 +118,7 @@ public class Connection
         byte[] length = BitConverter.GetBytes(bytes.Length);
         byte[] sendbuff = length.Concat(bytes).ToArray();
         socket.Send(sendbuff);
-        Debug.Log("发送消息"+protocol.GetDesc());
+        //Debug.Log("发送消息"+protocol.GetDesc());
         return true;
     }
     public bool Send(ProtocolBase protocol, string cbName, MsgDistribution.Delegate cb)

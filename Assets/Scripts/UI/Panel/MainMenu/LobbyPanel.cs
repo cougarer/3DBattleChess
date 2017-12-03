@@ -7,11 +7,12 @@ namespace UI.Panel
 {
     public class LobbyPanel : PanelBase
     {
+        private Transform ServerContent;
+
         private Button btnHostGame;
         private Button btnRefresh;
         private Button btnJoin;
         private Button btnBackToMenu;
-        private Transform ServerContent;
 
         private GameObject prefabServer;
 
@@ -46,6 +47,10 @@ namespace UI.Panel
             base.OnClosing();
 
             NetMgr.srvConn.msgDist.DelListener("GetServerList", RecvGetServerList);    //将刷新监听的方法删除
+            Debug.Log(NetMgr.srvConn.msgDist.ShowEventDicElement()); 
+            NetMgr.srvConn.msgDist.ClearEventDic();
+
+            PanelMgr.Instance.ClosePanel("UI.Panel.LobbyPanel+AchieveTip");
         }
         #endregion
 
@@ -61,13 +66,11 @@ namespace UI.Panel
         private void BtnRefresh()
         {
             ClearServerList();
-
             NetMgr.srvConn.msgDist.AddListener("GetServerList",RecvGetServerList);   //监听刷新事件
 
             ProtocolBytes protocol = new ProtocolBytes();
             protocol.AddString("GetServerList");
             NetMgr.srvConn.Send(protocol);
-            Debug.Log("Refresh");
         }
 
         private void BtnJoin()
@@ -78,6 +81,7 @@ namespace UI.Panel
         private void BtnBackToMenu()
         {
             PanelMgr.Instance.OpenPanel<MenuButtonsPanel>("");
+
             Close();
         }
 
@@ -121,16 +125,17 @@ namespace UI.Panel
         #region 其他辅助函数
         private void ClearServerList()
         {
+            NetMgr.srvConn.msgDist.DelListener("GetServerList", RecvGetServerList);
             for (int i = 0; i < ServerContent.childCount; i++)
             {
                 Destroy(ServerContent.GetChild(i).gameObject);
             }
-            NetMgr.srvConn.msgDist.DelListener("GetServerList", RecvGetServerList);
         }
 
         private void CreateServerTag(string serverDesc, string hostName,int serverStatus)
         {
             Transform tr= Instantiate(prefabServer, ServerContent).transform;
+
             Text textServerDesc = tr.Find("TextServerDesc").GetComponent<Text>();
             Text textHostName = tr.Find("TextHostName").GetComponent<Text>();
             Text textServerStatus = tr.Find("TextServerStatus").GetComponent<Text>();
@@ -138,6 +143,7 @@ namespace UI.Panel
 
             textServerDesc.text = serverDesc;
             textHostName.text = hostName;
+
             textServerStatus.text = serverStatus == 1 ? "满人" : "等待";
             tr.gameObject.GetComponent<Button>().onClick.AddListener(delegate() { BtnGetAchieve(hostName); });
         }

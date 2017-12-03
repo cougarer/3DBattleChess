@@ -57,6 +57,7 @@ public class MsgDistribution
     //添加监听事件
     public void AddListener(string name, Delegate cb)
     {
+        Debug.Log("增加方法" + name + ":" + cb.ToString());
         Delegate method;
         if (eventDic.TryGetValue(name, out method))
             method += cb;
@@ -77,12 +78,18 @@ public class MsgDistribution
     //删除监听事件
     public void DelListener(string name, Delegate cb)
     {
+        Debug.Log("删除方法" + name + ":" + cb.ToString());
         Delegate method;
-        if (eventDic.TryGetValue(name, out method))
+        if (eventDic.ContainsKey(name))
         {
+            method = eventDic[name];
+
             method -= cb;
-            if (eventDic[name] == null)
+
+            if (method == null)
+            {
                 eventDic.Remove(name);
+            }
         }
     }
 
@@ -96,5 +103,20 @@ public class MsgDistribution
             if (onceDic[name] == null)
                 onceDic.Remove(name);
         }
+    }
+
+    public void ClearEventDic()
+    {
+        eventDic.Clear();
+    }
+
+    public string ShowEventDicElement()
+    {
+        string str="";
+        foreach (Delegate d in eventDic.Values)
+        {
+            str += d.ToString();
+        }
+        return str;
     }
 }

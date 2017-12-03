@@ -18,6 +18,13 @@ public class MainMenuMananger : MonoBehaviour
         NetMgr.srvConn.proto = new ProtocolBytes();   //注意删除这个
         NetMgr.srvConn.Connect("127.0.0.1",1234);  //注意删除这个
 
+        //发送登录申请  //注意删除这个
+        ProtocolBytes protocol = new ProtocolBytes();  ////注意删除这个
+        protocol.AddString("Login");//注意删除这个
+        protocol.AddString("MaxLykoS");//注意删除这个
+        protocol.AddString("123456");//注意删除这个
+        NetMgr.srvConn.Send(protocol);//注意删除这个 
+
         PanelMgr.Instance.OpenPanel<MenuButtonsPanel>("");
     }
 

@@ -219,8 +219,7 @@ public class ServNet
         string name = protoBase.GetName();
         string methodName = "Msg" + name;
         //连接协议分发
-        //if (conn.player == null || name == "HeartBeat" || name == "Logout")
-        if (name == "HeartBeat" || name == "Logout")  //注意删除这个
+        if (conn.player == null || name == "HeartBeat" || name == "Logout")
         {
             MethodInfo mm = handleConnMsg.GetType().GetMethod(methodName);
             if (mm == null)
@@ -237,7 +236,6 @@ public class ServNet
         //角色协议分发
         else
         {
-            conn.player = new Player("MaxLykoS",conn);  //注意删除这个
             MethodInfo mm = handlePlayerMsg.GetType().GetMethod(methodName);
             if (mm == null)
             {
