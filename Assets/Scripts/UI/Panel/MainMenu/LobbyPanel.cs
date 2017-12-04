@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UI.Tip;
 
 namespace UI.Panel
 {
@@ -15,6 +16,8 @@ namespace UI.Panel
         private Button btnBackToMenu;
 
         private GameObject prefabServer;
+
+        private string joinServerID;
 
         #region 生命周期
         public override void Init(params object[] args)
@@ -75,7 +78,19 @@ namespace UI.Panel
 
         private void BtnJoin()
         {
-            Debug.Log("Join");
+            if (joinServerID == "")
+            {
+                PanelMgr.Instance.OpenPanel<WarningTip>("","请先选择要加入的服务器!");
+                return;
+            }
+
+            //判断房间是否还能ping通
+
+            ProtocolBytes protocol = new ProtocolBytes();
+            protocol.AddString("JoinServer");
+            protocol.AddString(joinServerID);
+            NetMgr.srvConn.Send(protocol, RecvJoinServer);
+
         }
 
         private void BtnBackToMenu()
@@ -103,7 +118,10 @@ namespace UI.Panel
             proto.GetString(start, ref start);   //“GetServerList”
             string protoDesc = proto.GetString(start, ref start);   //服务器描述
             string protoHostName = proto.GetString(start, ref start);//服务器房主名字
-            int protoServerStatus = proto.GetInt(start, ref start);  //服务器人数状态
+            int protoServerStatus = proto.GetInt(start, ref start);  //服务器是准备还是战斗
+
+            joinServerID = protoHostName;
+
             CreateServerTag(protoDesc, protoHostName, protoServerStatus);
         }
 
@@ -119,6 +137,29 @@ namespace UI.Panel
 
             PanelMgr.Instance.ClosePanel("UI.Panel.LobbyPanel+AchieveTip");
             PanelMgr.Instance.OpenPanel<AchieveTip>("", protoHostName, protoHostMapName, protoWinTimes.ToString(), protoFailTimes.ToString());
+        }
+
+        private void RecvJoinServer(ProtocolBase protocol)
+        {
+            ProtocolBytes proto = (ProtocolBytes)protocol;
+            int start = 0;
+            proto.GetString(start, ref start);  //"JoinServer"
+            int playerCount = proto.GetInt(start, ref start);   //0代表失败，1代表成功
+
+            if (playerCount == -1)
+            {
+                PanelMgr.Instance.OpenPanel<WarningTip>("", "加入服务器失败！");
+            }
+            else
+            {
+                for (int i = 0; i < playerCount; i++)
+                {
+                    昨晚上到这里,准备写读取该房间内玩家的信息，详细参数看服务器代码
+                }
+
+                PanelMgr.Instance.OpenPanel<RoomPanel>("");
+                Close();
+            }
         }
         #endregion
 
@@ -144,7 +185,7 @@ namespace UI.Panel
             textServerDesc.text = serverDesc;
             textHostName.text = hostName;
 
-            textServerStatus.text = serverStatus == 1 ? "满人" : "等待";
+            textServerStatus.text = serverStatus == 1 ? "战斗中" : "等待中";
             tr.gameObject.GetComponent<Button>().onClick.AddListener(delegate() { BtnGetAchieve(hostName); });
         }
         #endregion

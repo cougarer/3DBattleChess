@@ -9,14 +9,13 @@ public class PlayerTempData
     public Status status;
     public enum Status
     {
-        None,
-        Prepare,
-        Fighting,
+        None,//未加入任何房间
+        NotPrepared,   //加入房间了但处于未准备状态
+        Prepare,//加入房间了并处于准备状态
+        Fighting,    //加入房间了并处于游戏战斗状态
     }
 
     public LobbyServer server;
-
-    public string MapName;
 
     public bool isHost;
 
@@ -31,7 +30,6 @@ public class PlayerTempData
     {
         isHost = false;
         status = Status.None;
-        MapName = null;
         server = null;
     }
 }

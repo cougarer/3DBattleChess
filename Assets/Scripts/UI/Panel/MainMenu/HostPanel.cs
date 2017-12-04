@@ -95,8 +95,22 @@ namespace UI.Panel
 
         private void RecvCreateServer(ProtocolBase protocol)
         {
-            PanelMgr.Instance.OpenPanel<RoomPanel>("");
-            Close();
+            ProtocolBytes proto = (ProtocolBytes)protocol;
+            int start = 0;
+            proto.GetString(start, ref start);  //"CreateServer"
+            int status = proto.GetInt(start, ref start);   //1代表成功，0失败
+
+            if (status == 0)
+            {
+                PanelMgr.Instance.OpenPanel<WarningTip>("", "创建房间失败!");
+            }
+            else
+            {
+                PanelMgr.Instance.OpenPanel<WarningTip>("", "创建房间成功!");
+                PanelMgr.Instance.OpenPanel<RoomPanel>("");
+
+                Close();
+            }
         }
 
         #endregion

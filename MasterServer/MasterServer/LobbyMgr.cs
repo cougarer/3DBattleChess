@@ -17,7 +17,7 @@ public class LobbyMgr
     private Dictionary<string, LobbyServer> serverDic = new Dictionary<string, LobbyServer>();
 
     //根据名字获取LobbyServer
-    private LobbyServer GetLobbyServer(string hostName)
+    public LobbyServer GetLobbyServer(string hostName)
     {
         LobbyServer server=null;
         serverDic.TryGetValue(hostName, out server);
@@ -25,13 +25,25 @@ public class LobbyMgr
     }
 
     //添加服务器
-    public void AddServer(Player player,string serverDesc)
+    public bool AddServer(Player player,string serverDesc,string mapName)
     {
-        string hostName = player.id;
-        lock (serverDic)
+        try
         {
-            LobbyServer server = new LobbyServer(player,serverDesc);
-            serverDic[hostName] = server;
+            lock (serverDic)
+            {
+                LobbyServer server = new LobbyServer(player, serverDesc, mapName);
+
+                //设置服务器参数
+
+                serverDic[player.id] = server;
+
+                return true;
+            }
+        }
+        catch(Exception ex)
+        {
+            Console.WriteLine("[LobbyMgr] 创建房间失败:"+ex.Message);
+            return false;
         }
     }
 
@@ -47,9 +59,12 @@ public class LobbyMgr
             }
             else
             {
-                //房间内的其他玩家退出房间
-
                 serverDic.Remove(hostName);
+                //房间内的所有玩家退出房间
+                foreach (Player player in server.playerDic.Values)
+                {
+                    server.DelPlayer(player.id);
+                }
             }
         }
     }
@@ -63,7 +78,7 @@ public class LobbyMgr
             protocol.AddString("GetServerList");
             protocol.AddString(server.ServerDesc);
             protocol.AddString(server.id);
-            protocol.AddInt(server.ServerStatus);
+            protocol.AddInt((int)server.ServerStatus);
             player.Send(protocol);
         }
     }
@@ -75,6 +90,13 @@ public class LobbyMgr
         if (server == null)
         {
             Console.WriteLine("[Lobby] 要发送的战斗资料不存在！");
+
+            ProtocolBytes protoco = new ProtocolBytes();
+            protoco.AddString("GetAchieve");
+            protoco.AddString("房间不存在");
+            protoco.AddString("不存在");
+            protoco.AddInt(-1);
+            protoco.AddInt(-1);
             return;
         }
 

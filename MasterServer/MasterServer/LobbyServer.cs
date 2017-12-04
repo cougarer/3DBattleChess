@@ -23,7 +23,7 @@ public class LobbyServer
     public string HostMapName;
 
     //房间人数状态
-    public int ServerStatus;
+    public Status ServerStatus = Status.Prepare;
 
     public Dictionary<string, Player> playerDic = new Dictionary<string, Player>();
 
@@ -33,15 +33,15 @@ public class LobbyServer
         Fight,
     }
 
-    public LobbyServer(Player hostPlayer,string serverDesc)
+    public LobbyServer(Player hostPlayer,string serverDesc,string mapName)
     {
+        hostPlayer.tempData.isHost = true;
+
         ServerDesc = serverDesc;
 
         id = hostPlayer.id;
 
-        HostMapName = hostPlayer.tempData.MapName;
-
-        ServerStatus = (int)Status.Prepare;
+        HostMapName = mapName;
 
         playerDic[id] = hostPlayer;
     }
@@ -58,7 +58,7 @@ public class LobbyServer
 
             PlayerTempData tempData = player.tempData;
             tempData.server = this;
-            tempData.status = PlayerTempData.Status.Prepare;
+            tempData.status = PlayerTempData.Status.NotPrepared;
 
             string id = player.id;
             playerDic[id] = player;
@@ -78,5 +78,21 @@ public class LobbyServer
                 playerDic.Remove(id);
             }
         }
+    }
+
+    public ProtocolBytes GetServerPlayersInfo()
+    {
+        ProtocolBytes protocol = new ProtocolBytes();
+
+        protocol.AddString("JoinServer");
+        protocol.AddInt(playerDic.Count);
+
+        foreach (Player player in playerDic.Values)
+        {
+            protocol.AddString(player.id);
+            protocol.AddInt((int)player.tempData.status);
+        }
+
+        return protocol;
     }
 }

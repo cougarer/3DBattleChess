@@ -15,6 +15,6 @@ public class HandlePlayerEvent
     //下线
     public void OnLogout(Player player)
     {
-
+        LobbyMgr.Instance.DelServer(player.id);
     }
 }
