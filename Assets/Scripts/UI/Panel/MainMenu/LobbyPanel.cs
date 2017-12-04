@@ -160,7 +160,7 @@ namespace UI.Panel
                     infoList.Add(new RoomPlayerInfo(playerName, status));
                 }
 
-                PanelMgr.Instance.OpenPanel<RoomPanel>("");
+                PanelMgr.Instance.OpenPanel<RoomPanel>("", infoList,false);
                 Close();
             }
         }
