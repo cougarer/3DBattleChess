@@ -152,9 +152,12 @@ namespace UI.Panel
             }
             else
             {
+                List<RoomPlayerInfo> infoList = new List<RoomPlayerInfo>();   //存着该房间内所有玩家的名字和准备状态
                 for (int i = 0; i < playerCount; i++)
                 {
-                    昨晚上到这里,准备写读取该房间内玩家的信息，详细参数看服务器代码
+                    string playerName = proto.GetString(start, ref start);
+                    int status = proto.GetInt(start, ref start);  //1表示未准备，2表示准备
+                    infoList.Add(new RoomPlayerInfo(playerName, status));
                 }
 
                 PanelMgr.Instance.OpenPanel<RoomPanel>("");
@@ -232,6 +235,18 @@ namespace UI.Panel
                 textFailTimes.text = failTimes;
             }
             #endregion
+        }
+    }
+
+    public struct RoomPlayerInfo
+    {
+        public string playerName;
+        public int status;  //1表示未准备，2表示已经准备
+
+        public RoomPlayerInfo(string playerName, int status)
+        {
+            this.playerName = playerName;
+            this.status = status;
         }
     }
 }
