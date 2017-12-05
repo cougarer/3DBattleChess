@@ -17,7 +17,8 @@ namespace UI.Panel
 
         private GameObject prefabServer;
 
-        private string joinServerID;
+        private string joinServerID="";
+        private string mapName = "";
 
         #region 生命周期
         public override void Init(params object[] args)
@@ -120,8 +121,6 @@ namespace UI.Panel
             string protoHostName = proto.GetString(start, ref start);//服务器房主名字
             int protoServerStatus = proto.GetInt(start, ref start);  //服务器是准备还是战斗
 
-            joinServerID = protoHostName;
-
             CreateServerTag(protoDesc, protoHostName, protoServerStatus);
         }
 
@@ -134,6 +133,8 @@ namespace UI.Panel
             string protoHostMapName = proto.GetString(start, ref start);  //服务器地图
             int protoWinTimes = proto.GetInt(start, ref start);   //胜利次数
             int protoFailTimes = proto.GetInt(start, ref start);   //失败次数
+
+            GetServerInfo(protoHostName, protoHostMapName);
 
             PanelMgr.Instance.ClosePanel("UI.Panel.LobbyPanel+AchieveTip");
             PanelMgr.Instance.OpenPanel<AchieveTip>("", protoHostName, protoHostMapName, protoWinTimes.ToString(), protoFailTimes.ToString());
@@ -160,7 +161,7 @@ namespace UI.Panel
                     infoList.Add(new RoomPlayerInfo(playerName, status));
                 }
 
-                PanelMgr.Instance.OpenPanel<RoomPanel>("", infoList,false);
+                PanelMgr.Instance.OpenPanel<RoomPanel>("", infoList,false, joinServerID,mapName);
                 Close();
             }
         }
@@ -190,6 +191,12 @@ namespace UI.Panel
 
             textServerStatus.text = serverStatus == 1 ? "战斗中" : "等待中";
             tr.gameObject.GetComponent<Button>().onClick.AddListener(delegate() { BtnGetAchieve(hostName); });
+        }
+
+        private void GetServerInfo(string hostName,string mapName)
+        {
+            joinServerID = hostName;
+            mapName = mapName;
         }
         #endregion
 

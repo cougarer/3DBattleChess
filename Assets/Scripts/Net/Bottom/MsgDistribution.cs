@@ -48,9 +48,11 @@ public class MsgDistribution
         }
         if (onceDic.TryGetValue(name, out method))
         {
+            Debug.Log("执行分发消息" + name);
             method(protocol);
             onceDic[name] = null;
             onceDic.Remove(name);
+            Debug.Log("删除分发消息" + name);
         }
     }
 
@@ -96,12 +98,18 @@ public class MsgDistribution
     //删除单次监听事件
     public void DelOnceListener(string name, Delegate cb)
     {
+        Debug.Log("删除方法" + name + ":" + cb.ToString());
         Delegate method;
-        if (onceDic.TryGetValue(name, out method))
+        if (onceDic.ContainsKey(name))
         {
+            method = eventDic[name];
+
             method -= cb;
-            if (onceDic[name] == null)
+
+            if (method == null)
+            {
                 onceDic.Remove(name);
+            }
         }
     }
 

@@ -21,7 +21,7 @@ public class MainMenuMananger : MonoBehaviour
         //发送登录申请  //注意删除这个
         ProtocolBytes protocol = new ProtocolBytes();  ////注意删除这个
         protocol.AddString("Login");//注意删除这个
-        protocol.AddString("MaxLykoS");//注意删除这个
+        protocol.AddString("Max");//注意删除这个
         protocol.AddString("123456");//注意删除这个
         NetMgr.srvConn.Send(protocol);//注意删除这个 
 

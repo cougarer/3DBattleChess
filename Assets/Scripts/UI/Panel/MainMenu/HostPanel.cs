@@ -107,7 +107,7 @@ namespace UI.Panel
             else
             {
                 PanelMgr.Instance.OpenPanel<WarningTip>("", "创建房间成功!");
-                PanelMgr.Instance.OpenPanel<RoomPanel>("",null,true);
+                PanelMgr.Instance.OpenPanel<RoomPanel>("",null,true,Global.Instance.gameInfo.playerInfo.PlayerName,MapName);
 
                 Close();
             }

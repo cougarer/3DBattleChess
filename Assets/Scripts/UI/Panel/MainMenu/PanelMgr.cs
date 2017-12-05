@@ -72,7 +72,7 @@ public class PanelMgr : Singletion<PanelMgr>
         //panel的生命周期
         panel.OnShowing();   //预留的面板动画
         //anm
-        panel.OnShowed();
+        panel.OnShowed();   //加载结束时
     }
 
     //关闭面板

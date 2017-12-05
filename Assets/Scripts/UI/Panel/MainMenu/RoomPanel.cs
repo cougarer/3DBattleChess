@@ -10,24 +10,39 @@ namespace UI.Panel
         private Button btnStartServer;
         private Button btnBackToHostPanel;
 
+        private Transform side1Content;
+        private Transform side2Content;
+        private Transform spectContent;
+
         private Transform playerPanel;
 
         private List<RoomPlayerInfo> infoList;
         private bool isHost = false;
 
-        private Text MapName;
+        private Button btnMapName;
+        private string mapName;
+
+        private string hostName;
+
+        private GameObject PlayerInfoTag;
 
         #region 生命周期
         public override void Init(params object[] args)
         {
             base.Init(args);
 
-            //args[2]是玩家是否是主机
-            isHost = (bool)args[2];
+            //args[1]是玩家是否是主机
+            isHost = (bool)args[1];
 
-            //args[1]是服务器里的玩家信息
+            //args[0]是服务器里的玩家信息
             if (!isHost)
-                infoList = (List<RoomPlayerInfo>)args[1];
+            {
+                infoList = (List<RoomPlayerInfo>)args[0];
+            }
+
+            mapName = (string)args[3];   //3是地图名字
+            hostName = (string)args[2];  //2是主机名字
+
 
             skinPath = "Panel/MainMenu/RoomPanel";
             layer = PanelLayer.Panel;
@@ -41,6 +56,12 @@ namespace UI.Panel
             btnStartServer = skinTrans.Find("BtnStartServer").GetComponent<Button>();
             btnBackToHostPanel = skinTrans.Find("BtnBackToHostPanel").GetComponent<Button>();
             playerPanel = skinTrans.Find("PlayerPanel").transform;
+            side1Content=skinTrans.Find("PlayerPanel/Side1Panel").transform;
+            side2Content = skinTrans.Find("PlayerPanel/Side2Panel").transform;
+            spectContent = skinTrans.Find("PlayerPanel/SpectPanel").transform;
+            PlayerInfoTag = Resources.Load<GameObject>("Prefabs/Lobby/PlayerInfoTag");
+            btnMapName = skinTrans.Find("BtnMapName").GetComponent<Button>();
+
             btnStartServer.onClick.AddListener(BtnStartServer);
             btnBackToHostPanel.onClick.AddListener(BtnBackToHostPanel);
         }
@@ -49,13 +70,17 @@ namespace UI.Panel
         {
             base.OnShowed();
 
+            btnMapName.transform.Find("TextMapName").GetComponent<Text>().text = mapName;
+
             if (!isHost)
             {
                 foreach (RoomPlayerInfo info in infoList)
                 {
-                    CreatePlayerInfoTag(info);
+                    CreatePlayerInfoTag(side2Content, info);
                 }
             }
+            else
+                CreatePlayerInfoTag(side1Content, new RoomPlayerInfo(hostName, 1));
         }
         #endregion
 
@@ -74,9 +99,13 @@ namespace UI.Panel
 
         #region 辅助方法
 
-        private void CreatePlayerInfoTag(RoomPlayerInfo info)
+        private void CreatePlayerInfoTag(Transform content,RoomPlayerInfo info)
         {
+            Debug.Log("shuaxin");
+            GameObject go = Instantiate(PlayerInfoTag, side1Content);
 
+            go.transform.Find("TextPlayerName").GetComponent<Text>().text = info.playerName;
+            go.transform.Find("TextPlayerStatus").GetComponent<Text>().text = info.status == 1 ? "Not Ready" : "Ready";
         }
 
         #endregion
