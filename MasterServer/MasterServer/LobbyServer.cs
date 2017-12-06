@@ -89,7 +89,6 @@ public class LobbyServer
 
         foreach (Player player in playerDic.Values)
         {
-
             protocol.AddString(player.id);
             protocol.AddInt((int)player.tempData.status);
         }

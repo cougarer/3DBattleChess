@@ -40,9 +40,8 @@ namespace UI.Panel
                 infoList = (List<RoomPlayerInfo>)args[0];
             }
 
-            mapName = (string)args[3];   //3是地图名字
             hostName = (string)args[2];  //2是主机名字
-
+            mapName = (string)args[3];   //3是地图名字
 
             skinPath = "Panel/MainMenu/RoomPanel";
             layer = PanelLayer.Panel;
@@ -56,8 +55,8 @@ namespace UI.Panel
             btnStartServer = skinTrans.Find("BtnStartServer").GetComponent<Button>();
             btnBackToHostPanel = skinTrans.Find("BtnBackToHostPanel").GetComponent<Button>();
             playerPanel = skinTrans.Find("PlayerPanel").transform;
-            side1Content=skinTrans.Find("PlayerPanel/Side1Panel").transform;
-            side2Content = skinTrans.Find("PlayerPanel/Side2Panel").transform;
+            side1Content = skinTrans.Find("PlayerPanel/Side1Panel/Side1Content").transform;
+            side2Content = skinTrans.Find("PlayerPanel/Side2Panel/Side2Content").transform;
             spectContent = skinTrans.Find("PlayerPanel/SpectPanel").transform;
             PlayerInfoTag = Resources.Load<GameObject>("Prefabs/Lobby/PlayerInfoTag");
             btnMapName = skinTrans.Find("BtnMapName").GetComponent<Button>();
@@ -103,6 +102,8 @@ namespace UI.Panel
         {
             Debug.Log("shuaxin");
             GameObject go = Instantiate(PlayerInfoTag, side1Content);
+
+            go.transform.localPosition = Vector3.zero;
 
             go.transform.Find("TextPlayerName").GetComponent<Text>().text = info.playerName;
             go.transform.Find("TextPlayerStatus").GetComponent<Text>().text = info.status == 1 ? "Not Ready" : "Ready";
