@@ -15,6 +15,13 @@ public class HandlePlayerEvent
     //下线
     public void OnLogout(Player player)
     {
+        LobbyMgr.Instance.LogOutInGame(player);
+
         LobbyMgr.Instance.DelServer(player.id);
+
+        if(player.tempData.hostName!=null)
+            LobbyMgr.Instance.DelServerMember(player.tempData.hostName,player.id);
+
+        Console.WriteLine("客户端下线 " + player.id);
     }
 }

@@ -18,7 +18,7 @@ public abstract class Grid : MonoBehaviour
     /// <returns></returns>
     public bool IsTerrain()
     {
-        if (this is TerrainBase)
+        if (this is Landform)
             return true; 
         else
             return false;
@@ -99,4 +99,6 @@ public abstract class Grid : MonoBehaviour
     public abstract void StopHighLight();
 
     protected abstract IEnumerator IHightLight();
+
+    public abstract void BeDestroyed();
 }

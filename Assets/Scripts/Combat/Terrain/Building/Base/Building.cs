@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -34,6 +35,74 @@ public class Building : TerrainBase
 
         if (capturePoint <= 0)  //被占领了
         {
+            GameStatNotifier.Instance.Capture[(int)captureUnit.Side]++;
+
+            #region 判断输赢
+            if (gridType == GridType.HQ)
+            {
+                bool isPlayer1 = Global.Instance.gameInfo.IsHost;
+                CombatController cc = GameObject.Find("CombatController").GetComponent<CombatController>();
+                if (isPlayer1)
+                {
+                    if (Side == SideType.Friendly)
+                    {
+                        Debug.Log("输了");
+                        NetMgr.srvConn.gameNet.SendStatus(false, GameNet.GameStatus.Lose);
+                        cc.GameEndHandler(false);
+                    }
+                    else if (Side == SideType.Enemy)
+                    {
+                        Debug.Log("赢了");
+                        NetMgr.srvConn.gameNet.SendStatus(true, GameNet.GameStatus.Win);
+                        cc.GameEndHandler(true);
+                    }
+                }
+                else
+                {
+                    if (Side == SideType.Friendly)
+                    {
+                        Debug.Log("赢了");
+                        NetMgr.srvConn.gameNet.SendStatus(false, GameNet.GameStatus.Win);
+                        cc.GameEndHandler(true);
+                    }
+                    else if (Side == SideType.Enemy)
+                    {
+                        Debug.Log("输了");
+                        NetMgr.srvConn.gameNet.SendStatus(false, GameNet.GameStatus.Lose);
+                        cc.GameEndHandler(false);
+                    }
+                }
+            }
+            #endregion
+            #region 判断城市增减
+            if (gridType == GridType.City)
+            {
+                bool isPlayer1Capture = captureUnit.Side==SideType.Friendly?true:false;
+                if (Side == SideType.Neutral)
+                {
+                    if(isPlayer1Capture)
+                        CombatController.p1CitysCount++;
+                    else
+                        CombatController.p2CitysCount++;
+                }
+                else if (Side == SideType.Friendly)
+                {
+                    if (!isPlayer1Capture)
+                    {
+                        CombatController.p1CitysCount--;
+                        CombatController.p2CitysCount++;
+                    }
+                }
+                else if(Side==SideType.Enemy)
+                {
+                    if (isPlayer1Capture)
+                    {
+                        CombatController.p1CitysCount++;
+                        CombatController.p1CitysCount--;
+                    }
+                }
+            }
+            #endregion
             capturePoint = oldCapturePoint;
             switch (captureUnit.Side)
             {

@@ -85,6 +85,20 @@ public class ProtocolBytes:ProtocolBase
             bytes = bytes.Concat(numBytes).ToArray();
     }
 
+    //添加一个坐标
+    public void AddPoint(Point p)
+    {
+        AddInt(p.X);
+        AddInt(p.Z);
+    }
+
+    //返回一个坐标
+    public Point GetPoint(int start,ref int end)
+    {
+        end = start + sizeof(Int32) * 2;
+        return new Point(GetInt(start, ref start), GetInt(start, ref start));
+    }
+
     //返回数据中的一个int
     public int GetInt(int start,ref int end)
     {

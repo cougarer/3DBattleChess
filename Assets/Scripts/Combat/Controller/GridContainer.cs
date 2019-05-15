@@ -256,4 +256,18 @@ public class GridContainer : Singletion<GridContainer> {
 
         }
     }
+
+    public void Clear()
+    {
+        List<Unit> list1 = new List<Unit>();
+        foreach (Unit u in GridContainer.Instance.UnitDic.Values)
+            list1.Add(u);
+        foreach (Unit u in list1)
+            u.BeDestroyed();
+        List<TerrainBase> list2 = new List<TerrainBase>();
+        foreach (TerrainBase tb in GridContainer.Instance.TerrainDic.Values)
+            list2.Add(tb);
+        foreach (TerrainBase tb in list2)
+            tb.BeDestroyed();
+    }
 }

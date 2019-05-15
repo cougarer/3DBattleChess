@@ -37,9 +37,13 @@ public class Connection
     };
     public Status status = Status.None;
 
+    //游戏同步
+    public GameNet gameNet;
+
     //连接服务器
     public bool Connect(string host, int port)
     {
+        gameNet = new GameNet();
         try
         {
             socket = new Socket(AddressFamily.InterNetwork, SocketType.Stream, ProtocolType.Tcp);
@@ -110,7 +114,7 @@ public class Connection
     {
         if (status != Status.Connected)
         {
-            Debug.LogError("还没建立间接无法发送数据");
+            Debug.LogError("还没建立连接无法发送数据");
             return false;
         }
 

@@ -166,10 +166,16 @@ public class CameraController : MonoBehaviour {
         if (pointHit.transform != null&&pointHit.transform.position!= pointPos)
         {
             Debug.Log("PointGrid");
+
             pointPos = GridContainer.Instance.TerrainDic[Point.StringToPoint(pointHit.transform.name)].transform.position;
             pointPos.y += 0.6f;
             CircleCursor.transform.position = pointPos;
             pointPos.y -= 0.6f;
+
+            #region 显示点击格子的详细资料
+            if(!GridContainer.isEditorMode)
+                combatController.ShowGridDetailPanel(Point.StringToPoint(pointHit.transform.name));
+            #endregion
         }
     }
     #endregion

@@ -51,8 +51,6 @@ namespace UI.Panel
             base.OnClosing();
 
             NetMgr.srvConn.msgDist.DelListener("GetServerList", RecvGetServerList);    //将刷新监听的方法删除
-            Debug.Log(NetMgr.srvConn.msgDist.ShowEventDicElement()); 
-            NetMgr.srvConn.msgDist.ClearEventDic();
 
             PanelMgr.Instance.ClosePanel("UI.Panel.LobbyPanel+AchieveTip");
         }
@@ -63,6 +61,8 @@ namespace UI.Panel
         private void BtnHostGame()
         {
             PanelMgr.Instance.OpenPanel<HostPanel>("");
+
+
 
             Close();
         }
@@ -91,7 +91,6 @@ namespace UI.Panel
             protocol.AddString("JoinServer");
             protocol.AddString(joinServerID);
             NetMgr.srvConn.Send(protocol, RecvJoinServer);
-
         }
 
         private void BtnBackToMenu()
@@ -154,12 +153,10 @@ namespace UI.Panel
             else
             {
                 List<RoomPlayerInfo> infoList = new List<RoomPlayerInfo>();   //存着该房间内所有玩家的名字和准备状态
-                for (int i = 0; i < playerCount; i++)
-                {
-                    string playerName = proto.GetString(start, ref start);
-                    int status = proto.GetInt(start, ref start);  //1表示未准备，2表示准备
-                    infoList.Add(new RoomPlayerInfo(playerName, status));
-                }
+                string playerName = proto.GetString(start, ref start);
+                int status = proto.GetInt(start, ref start);  //1表示未准备，2表示准备
+                infoList.Add(new RoomPlayerInfo(playerName, status));
+                infoList.Add(new RoomPlayerInfo(Global.Instance.gameInfo.playerInfo.PlayerName, 1));
 
                 PanelMgr.Instance.OpenPanel<RoomPanel>("", infoList,false, joinServerID,mapName);
                 Close();
@@ -184,7 +181,7 @@ namespace UI.Panel
             Text textServerDesc = tr.Find("TextServerDesc").GetComponent<Text>();
             Text textHostName = tr.Find("TextHostName").GetComponent<Text>();
             Text textServerStatus = tr.Find("TextServerStatus").GetComponent<Text>();
-            Text textServerPing = tr.Find("TextServerPing").GetComponent<Text>();
+            //Text textServerPing = tr.Find("TextServerPing").GetComponent<Text>();
 
             textServerDesc.text = serverDesc;
             textHostName.text = hostName;
@@ -193,10 +190,10 @@ namespace UI.Panel
             tr.gameObject.GetComponent<Button>().onClick.AddListener(delegate() { BtnGetAchieve(hostName); });
         }
 
-        private void GetServerInfo(string hostName,string mapName)
+        private void GetServerInfo(string hostName,string _mapName)
         {
             joinServerID = hostName;
-            mapName = mapName;
+            mapName = _mapName;
         }
         #endregion
 
@@ -245,15 +242,32 @@ namespace UI.Panel
         }
     }
 
-    public struct RoomPlayerInfo
+    public class RoomPlayerInfo
     {
         public string playerName;
-        public int status;  //1表示未准备，2表示已经准备
+        private GameObject infoTag;
+        public int Status
+        {
+            get { return status; }
+            set
+            {
+                status = value;
+                infoTag.transform.Find("TextPlayerStatus").GetComponent<Text>().text = value==1?"未准备":"准备";
+            }
+        }
+        private int status;  //1表示未准备，2表示已经准备
 
         public RoomPlayerInfo(string playerName, int status)
         {
             this.playerName = playerName;
             this.status = status;
+            infoTag = null;
+        }
+
+        public void SetInfoTag(GameObject go)
+        {
+            infoTag = go;
+            infoTag.transform.Find("TextPlayerName").GetComponent<Text>().text = playerName;
         }
     }
 }

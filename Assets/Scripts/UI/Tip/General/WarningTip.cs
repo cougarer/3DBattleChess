@@ -32,8 +32,8 @@ namespace UI.Tip
             base.OnShowing();
 
             Transform skinTrans = skin.transform;
-            infoText = skinTrans.Find("TextInfo").GetComponent<Text>();
-            ackButton = skinTrans.Find("BtnAck").GetComponent<Button>();
+            infoText = skinTrans.Find("Image/TextInfo").GetComponent<Text>();
+            ackButton = skinTrans.Find("Image/BtnAck").GetComponent<Button>();
 
             infoText.text = str;
             ackButton.onClick.AddListener(OnBtnClick);

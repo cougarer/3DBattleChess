@@ -84,4 +84,10 @@ public abstract class TerrainBase : Grid
     {
         
     }
+
+    public override void BeDestroyed()
+    {
+        Destroy(gameObject);
+        GridContainer.Instance.TerrainDic.Remove(gridID);
+    }
 }

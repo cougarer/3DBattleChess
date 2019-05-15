@@ -47,6 +47,12 @@ namespace UI.Panel
             LoadMap();
         }
 
+        public override void OnClosing()
+        {
+            base.OnClosing();
+
+            GridContainer.Instance.Clear();
+        }
         #endregion
 
         #region 按钮监听
@@ -80,8 +86,14 @@ namespace UI.Panel
 
         private void BtnChooseMap(string name)
         {
+            if (MapName == name)
+                return;
             MapName = name;
             Debug.Log(name);
+
+            GridContainer.Instance.Clear();
+            GridContainer.isEditorMode = false;
+            MapLoader.LoadCustomLevel(name);
         }
 
         private void BtnServerOption()
@@ -107,7 +119,9 @@ namespace UI.Panel
             else
             {
                 PanelMgr.Instance.OpenPanel<WarningTip>("", "创建房间成功!");
-                PanelMgr.Instance.OpenPanel<RoomPanel>("",null,true,Global.Instance.gameInfo.playerInfo.PlayerName,MapName);
+                List<RoomPlayerInfo> infoList = new List<RoomPlayerInfo>();
+                infoList.Add(new RoomPlayerInfo(Global.Instance.gameInfo.playerInfo.PlayerName, 1));
+                PanelMgr.Instance.OpenPanel<RoomPanel>("", infoList, true,Global.Instance.gameInfo.playerInfo.PlayerName,MapName);
 
                 Close();
             }

@@ -174,7 +174,7 @@ public class EditorController : MonoBehaviour
     /// </summary>
     public void BtnSaveMap()
     {
-        MapLoader.SaveMap(GridContainer.level);
+        MapLoader.SaveMap(GridContainer.level,true);
         BtnReturnMenu();
     }
 
@@ -552,7 +552,8 @@ public class EditorController : MonoBehaviour
         {
             TerrainBase tb = GridContainer.Instance.TerrainDic[clickPos];
             if (tb.IsTerrain() &&
-                (tb.gridType == CurrentClickGridType || CurrentClickSideType != SideType.Neutral))
+                tb.gridType == CurrentClickGridType)
+                //(tb.gridType == CurrentClickGridType || CurrentClickSideType != SideType.Neutral))
                 return;
             //是地形，同型，退出
 
@@ -596,5 +597,8 @@ public class EditorController : MonoBehaviour
             }
         }
     }
-
+    void Update()
+    {
+        NetMgr.Update();//消息监听
+    }
 }

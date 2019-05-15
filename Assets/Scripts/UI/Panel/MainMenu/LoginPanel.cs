@@ -26,6 +26,13 @@ namespace UI.Panel
         {
             base.OnShowing();
 
+            //当玩家从游戏结算界面返回主菜单时，跳过登陆界面
+            if (Global.Instance.gameInfo.playerInfo.PlayerName != "")
+            {
+                PanelMgr.Instance.OpenPanel<MenuButtonsPanel>("");
+                Close();
+            }
+
             Transform skinTrans = skin.transform;
             inputFieldName = skinTrans.Find("InputFieldName").GetComponent<InputField>();
             inputFieldPwd = skinTrans.Find("InputFieldPwd").GetComponent<InputField>();
@@ -55,8 +62,9 @@ namespace UI.Panel
 
             if (NetMgr.srvConn.status != Connection.Status.Connected)
             {
-                string host = "127.0.0.1";
-                int port = 1234;
+                //string host = "127.0.0.1";
+                string host = "47.94.251.161";
+                int port = 8075;
                 NetMgr.srvConn.proto = new ProtocolBytes();  //用来接受服务器发送的信息
                 NetMgr.srvConn.Connect(host, port);
             }
@@ -83,6 +91,7 @@ namespace UI.Panel
             if (ret == 0)
             {
                 Debug.Log("登录成功");
+                Global.Instance.gameInfo.playerInfo.PlayerName = inputFieldName.text;
 
                 //进入游戏主菜单
                 PanelMgr.Instance.OpenPanel<MenuButtonsPanel>("");

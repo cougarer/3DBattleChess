@@ -45,4 +45,9 @@ public class Level
         UnitSideList.Clear();
     }
 
+    public override string ToString()
+    {
+            return UnityEngine.JsonUtility.ToJson(this);
+    }
+
 }

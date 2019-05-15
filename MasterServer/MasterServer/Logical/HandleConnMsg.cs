@@ -36,17 +36,17 @@ public partial class HandleConnMsg
         protocol.AddString("Register");
 
         //注册
-        if (DataMgr.Instance.Register(id, pw))
-        {
+        //if (DataMgr.Instance.Register(id, pw))
+        //{
             protocol.AddInt(0);
-        }
-        else
-        {
-            protocol.AddInt(-1);
-        }
+        //}
+        //else
+        //{
+           // protocol.AddInt(-1);
+        //}
 
         //创建角色
-        DataMgr.Instance.CreatePlayer(id);
+        //DataMgr.Instance.CreatePlayer(id);
 
         //返回协议给客户端
         conn.Send(protocol);
@@ -69,15 +69,15 @@ public partial class HandleConnMsg
         //构建返回协议
         ProtocolBytes protocolRet = new ProtocolBytes();
         protocolRet.AddString("Login");
-        /*//验证
-        if (!DataMgr.Instance.CheckPassWord(id, pw))
-        {
-            protocolRet.AddInt(-1);
-            conn.Send(protocolRet);
-            return;
-        }*/
+        //验证
+        //if (!DataMgr.Instance.CheckPassWord(id, pw))
+        //{
+        //    protocolRet.AddInt(-1);
+        //    conn.Send(protocolRet);
+        //    return;
+        //}
 
-        /*//是否已经登录
+        //是否已经登录
         ProtocolBytes protocolLogout = new ProtocolBytes();
         protocolLogout.AddString("Logout");
         if (!Player.KickOff(id, protocolLogout))
@@ -85,10 +85,11 @@ public partial class HandleConnMsg
             protocolRet.AddInt(-1);
             conn.Send(protocolRet);
             return;
-        }*/
+        }
 
-        /*//获取玩家数据
-        PlayerData playerData = DataMgr.Instance.GetPlayerData(id);
+        //获取玩家数据
+        //PlayerData playerData = DataMgr.Instance.GetPlayerData(id);
+        PlayerData playerData = new PlayerData();   //注意删除
         if (playerData == null)
         {
             protocolRet.AddInt(-1);
@@ -96,14 +97,7 @@ public partial class HandleConnMsg
             return;
         }
         conn.player = new Player(id, conn);
-        conn.player.data = playerData;//将玩家数据与连接的玩家数据绑定*/
-
-        //获取玩家数据 注意删除这个
-        PlayerData playerData = new PlayerData();//注意删除这个
-        playerData.FailTimes = 10;//注意删除这个
-        playerData.WinTimes = 100;//注意删除这个
-        conn.player = new Player(id, conn);//注意删除这个
-        conn.player.data = playerData;//注意删除这个
+        conn.player.data = playerData;//将玩家数据与连接的玩家数据绑定
 
         //事件触发
         ServNet.Instance.handlePlayerEvent.OnLogin(conn.player);
@@ -111,6 +105,9 @@ public partial class HandleConnMsg
         //返回成功协议
         protocolRet.AddInt(0);
         conn.Send(protocolRet);
+
+        /*LobbyMgr.Instance.AddServer(conn.player, "server", "CustomLevel1");//注意删除
+        Console.WriteLine("注意删除");*/
         return;
     }
 

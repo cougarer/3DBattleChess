@@ -5,9 +5,4 @@ using UnityEngine;
 public class Landform : TerrainBase
 {
 
-	void Start ()
-    {
-		
-	}
-	
 }

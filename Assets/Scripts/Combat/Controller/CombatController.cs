@@ -17,25 +17,25 @@ public class CombatController : MonoBehaviour {
     public static bool isPlayer1=false;  //玩家作为玩家1进行游戏
     public static bool isPlayer2=false;  //玩家作为玩家2进行游戏
 
-    public bool P1Ready
-    {
-        get { return p1Ready; }
-    }
     private bool p1Ready = false;
-    public bool P2Ready
-    {
-        get { return p2Ready; }
-    }
     private bool p2Ready = false;
 
-    public int Rounds = 1;   //当前是第几回合
+    private int Rounds = 1;   //当前是第几回合
 
     private int firstClick = 1;
 
     void Awake()
     {
-        isPlayer1 = true;
-        isPlayer2 = true;
+        if (Global.Instance.gameInfo.IsHost)
+        {
+            isPlayer1 = true;
+            isPlayer2 = false;
+        }
+        else
+        {
+            isPlayer2 = true;
+            isPlayer1 = false;
+        }
     }
     void Start ()
     {
@@ -45,8 +45,24 @@ public class CombatController : MonoBehaviour {
 
         GridContainer.isEditorMode = false;   //开启战斗模式
 
-        MapLoader.LoadCustomLevel("CustomLevel1");
+        MapLoader.LoadCustomLevel(Global.Instance.gameInfo.MapName);
+        /*MapLoader.LoadCustomLevel("CustomLevel1");
+        string host = "127.0.0.1";
+        int port = 1234;
+        NetMgr.srvConn.proto = new ProtocolBytes();  //用来接受服务器发送的信息
+        NetMgr.srvConn.Connect(host, port);
+        ProtocolBytes protocol = new ProtocolBytes();
+        protocol.AddString("Login");
+        protocol.AddString("max");
+        protocol.AddString("1234");
+        NetMgr.srvConn.Send(protocol);
+        isPlayer1 = true;
+        isPlayer2 = true;
+        Global.Instance.gameInfo.playerInfo.PlayerName = "max";*/
+
+        GameStatNotifier.Instance.Init();
         GridContainer.GameStartKey = true;
+        GameStatNotifier.Instance.StartTimer();
     }
 
     void FindUI()
@@ -63,8 +79,12 @@ public class CombatController : MonoBehaviour {
     private void Init()
     {
         PayloadLandRange = new List<TerrainBase>();
-    }
 
+        p1CashTotal = 3000;
+        p2CashTotal = 3000;
+
+        AddListener();
+    }
 
     /// <summary>
     /// 战斗模式下点击格子后的回调函数
@@ -72,11 +92,18 @@ public class CombatController : MonoBehaviour {
     /// <param name="clickPos"></param>
     public void ClickChooseGridEventHandler(Point clickPos)
     {
-        couldCancel = true;
+        if (isPlayer1)
+        {
+            if (p1Ready)
+                return;
+        }
+        else if(isPlayer2)
+        {
+            if (p1Ready==false)
+                return;
+        }
 
-        #region 显示点击格子的详细资料
-        ShowGridDetailPanel(clickPos);
-        #endregion
+        couldCancel = true;
 
         #region 第一次点击   //选中单位，选中建筑
         if (firstClick==1)
@@ -148,7 +175,10 @@ public class CombatController : MonoBehaviour {
                 firstClick=0;   //单位移动时屏蔽点击
                 PathNav.bMoving = true;
                 PathNav.StopShowUnitMoveRange();
-                PathNav.CurrentMovingUnit.UnitMoveToTargetPos(clickPos, OnMoveEnd);
+
+                NetMgr.srvConn.gameNet.SendMove(PathNav.CurrentMovingUnit.gridID,clickPos);  //同步移动位置
+
+                //PathNav.CurrentMovingUnit.UnitMoveToTargetPos(clickPos, OnMoveEnd);
                 return;
             }
         }
@@ -169,10 +199,10 @@ public class CombatController : MonoBehaviour {
                         Men cu = (Men)PathNav.CurrentMovingUnit;
 
                         Debug.Log("尝试占领");
-
-                        b.BeCapture(cu);
+                        NetMgr.srvConn.gameNet.SendBuildingCapture(b.gridID);
 
                         PathNav.CurrentMovingUnit.SetMovedToken();//攻击完了就标记已运动
+                        NetMgr.srvConn.gameNet.SendMoveDone(PathNav.CurrentMovingUnit.gridID);
 
                         firstClick = 1;
                         PathNav.CurrentMovingUnit.StopShowAttackRange();
@@ -188,33 +218,19 @@ public class CombatController : MonoBehaviour {
                     && targetUnit.Side != PathNav.CurrentMovingUnit.Side)//该位置有个敌人单位
                 {
                     #region 攻击和被攻击
-                    PathNav.CurrentMovingUnit.AttackInitiative(targetUnit);  //攻击
-
-                    if (PathNav.CurrentMovingUnit.isAlive())  //如果自己还活着
-                    {
-                        if (targetUnit.isAlive())  //如果敌人还活着，就会被动攻击我，长程火力除外
-                        {
-                            if (!PathNav.CurrentMovingUnit.isLongRangeUnit())
-                            {
-                                targetUnit.AttackPassive(PathNav.CurrentMovingUnit);
-                            }
-                        }
-                        else
-                        {
-                            targetUnit.BeDestroyed();   //如果敌人挂了，就被摧毁
-                        }
-                    }
+                    NetMgr.srvConn.gameNet.SendAttackInitiative(PathNav.CurrentMovingUnit.gridID, targetUnit.gridID);
 
                     #endregion
 
                     PathNav.CurrentMovingUnit.SetMovedToken();//攻击完了就标记已运动
+                    NetMgr.srvConn.gameNet.SendMoveDone(PathNav.CurrentMovingUnit.gridID);
 
                     firstClick = 1;
                     PathNav.CurrentMovingUnit.StopShowAttackRange();
 
                     if (!PathNav.CurrentMovingUnit.isAlive())  //自己被敌人被动攻击干掉后，就被摧毁
                     {
-                        PathNav.CurrentMovingUnit.BeDestroyed();
+                        NetMgr.srvConn.gameNet.SendUnitDestroy(PathNav.CurrentMovingUnit.gridID);
                     }
 
                     return;
@@ -226,13 +242,7 @@ public class CombatController : MonoBehaviour {
                 GridContainer.Instance.UnitDic[clickPos].Side
                 && GridContainer.Instance.UnitDic[clickPos] is ITransport)    //上车
                 {
-                    ITransport carrier = (ITransport)targetUnit;
-
-                    if (carrier.Load(PathNav.CurrentMovingUnit))
-                    {
-                        firstClick = 1;
-                        return;
-                    }
+                    NetMgr.srvConn.gameNet.SendLoadUnit(PathNav.CurrentMovingUnit.gridID, targetUnit.gridID);
                 }
                 #endregion
             }
@@ -246,13 +256,7 @@ public class CombatController : MonoBehaviour {
                     ITransport it = (ITransport)PathNav.CurrentMovingUnit;
                     if (it.PayLoad.CheckCouldMoveTo(GridContainer.Instance.TerrainDic[clickPos]))//如果该地点可以下车
                     {
-                        it.UnLoad(clickPos);
-                        foreach (TerrainBase tb in PayloadLandRange)
-                            tb.StopHighLight();
-                        PayloadLandRange.Clear();
-
-                        firstClick = 1;
-                        return;
+                        NetMgr.srvConn.gameNet.SendUnloadUnit(clickPos, PathNav.CurrentMovingUnit.gridID);
                     }
                 }
             }
@@ -299,6 +303,7 @@ public class CombatController : MonoBehaviour {
                 }
 
                 PathNav.CurrentMovingUnit.SetMovedToken();
+                NetMgr.srvConn.gameNet.SendMoveDone(PathNav.CurrentMovingUnit.gridID);
 
                 firstClick = 1;    //如果该单位没有攻击能力，直接跳过！转入第一次点击状态
             }
@@ -308,6 +313,24 @@ public class CombatController : MonoBehaviour {
             firstClick = 1;
         }
     }
+
+    #region 比赛结束
+    public void GameEndHandler(bool win)
+    {
+        PanelMgr.Instance.OpenPanel<UI.Tip.WarningTip>("",win?"You win!":"You lose!");
+        NetMgr.srvConn.msgDist.ClearEventDic();
+        Invoke("MoveToStatPanel", 5f);
+    }
+    void MoveToStatPanel()
+    {
+        GridContainer.Instance.TerrainLayer.gameObject.SetActive(false);
+        GridContainer.Instance.UnitLayer.gameObject.SetActive(false);
+
+        PanelMgr.Instance.ClosePanel("UI.Tip.WarningTip");
+        PanelMgr.Instance.ClosePanel("UI.Panel.GridDetailPanel");
+        PanelMgr.Instance.OpenPanel<UI.Panel.GameStatPanel>("");
+    }
+    #endregion
 
     private bool couldCancel = false;
     /// <summary>
@@ -325,6 +348,7 @@ public class CombatController : MonoBehaviour {
                 if (firstClick == 3)
                 {
                     PathNav.CurrentMovingUnit.SetMovedToken();
+                    NetMgr.srvConn.gameNet.SendMoveDone(PathNav.CurrentMovingUnit.gridID);
                 }
             }
             #endregion
@@ -350,9 +374,35 @@ public class CombatController : MonoBehaviour {
     /// 显示当前所点击格子的详细资料
     /// </summary>
     /// <param name="clickPos"></param>
-    void ShowGridDetailPanel(Point clickPos)
+    public void ShowGridDetailPanel(Point pointPos)
     {
+        PanelMgr.Instance.ClosePanel("UI.Panel.GridDetailPanel");
+        Unit u;
+        TerrainBase tb;
+        if (GridContainer.Instance.UnitDic.TryGetValue(pointPos, out u))
+        {
+            //部队  图片 名字 血量 伤害 护甲 伤害类型
+            Texture m = u.gameObject.GetComponent<MeshRenderer>().materials[0].mainTexture;
+            string s1, s2, s3, s4, s5;
+            s1 = "Name:"+u.gridType.ToString();
+            s2 = "HP:"+u.HP.ToString();
+            s3 = "Dmg:"+(u.FirePower * (u.HP / 100)).ToString();
+            s4 = "Armor:"+u.armorType.ToString();
+            s5 = "Type:"+u.attackType.ToString();
+            PanelMgr.Instance.OpenPanel<UI.Panel.GridDetailPanel>("",m,s1,s2,s3,s4,s5);
+        }
+        else if (GridContainer.Instance.TerrainDic.TryGetValue(pointPos, out tb))
+        {
+            //地形  图片 名字 防御力 油量消耗      
+            Texture m = tb.gameObject.GetComponent<MeshRenderer>().materials[0].mainTexture;
+            string s1, s2, s3;
+            s1 = "Name:" + tb.gridType.ToString();
+            s2 = "DEF:" + tb.DefendStar;
+            s3 = "OilCost:" + tb.OilCost;
+            PanelMgr.Instance.OpenPanel<UI.Panel.GridDetailPanel>("",m,s1,s2,s3);
+        }
 
+        //PanelMgr.Instance.ClosePanel("UI.Panel.LobbyPanel + AchieveTip")
     }
 
     #region 建造面板
@@ -402,14 +452,7 @@ public class CombatController : MonoBehaviour {
 
         if (CheckIfAfford(price, side))
         {
-            GridContainer.Instance.AddUnit(CameraController.CurrentClickPos, newType, side);
-
-            Unit u = GridContainer.Instance.UnitDic[CameraController.CurrentClickPos];
-            u.StopMoveable();
-            u.SetMovedToken();
-
-            UpdateTotalCashText();
-            HideBuildingPanel();
+            NetMgr.srvConn.gameNet.SendCreateUnit(type, CameraController.CurrentClickPos);
         }
     }
     /// <summary>
@@ -479,7 +522,8 @@ public class CombatController : MonoBehaviour {
             }
             else
             {
-                p2CashTotal -= price;  //扣钱
+                //p2CashTotal -= price;  //扣钱
+                //GameStatNotifier.Instance.Cost[1] += price;
                 return true;
             }
         }
@@ -492,7 +536,8 @@ public class CombatController : MonoBehaviour {
             }
             else
             {
-                p1CashTotal -= price;  //扣钱
+                //p1CashTotal -= price;  //扣钱
+                //GameStatNotifier.Instance.Cost[0] += price;
                 return true;
             }
         }
@@ -511,33 +556,24 @@ public class CombatController : MonoBehaviour {
     /// <param name="order"></param>
     public void BtnPlayerReady(int order)
     {
-
         switch (order)
         {
             case 1:
                 {
                     if (isPlayer1)
-                    {
-                        p1Ready = true;
-                        textP1Ready.text = "Player 1 is ready!";
+                    { 
+                        NetMgr.srvConn.gameNet.SendStatus(true, GameNet.GameStatus.Ready);
                     }
-                        break;
+                    break;
                 }
             case 2:
                 {
                     if (isPlayer2)
                     {
-                        p2Ready = true;
-                        textP2Ready.text = "Player 2 is ready!";
+                        NetMgr.srvConn.gameNet.SendStatus(false, GameNet.GameStatus.Ready);
                     }
                     break;
                 }
-        }
-
-        if (p1Ready && p2Ready)
-        {
-            PathNav.bMoving = false;   //让正在移动的棋子立刻到达终点，进入下一回合
-            NextRound();
         }
     }
     /// <summary>
@@ -563,6 +599,9 @@ public class CombatController : MonoBehaviour {
         p1CashTotal += 1000 * p1CitysCount;
         p2CashTotal += 1000 * p2CitysCount;
 
+        GameStatNotifier.Instance.Earn[0] += 1000 * p1CitysCount;
+        GameStatNotifier.Instance.Earn[1] += 1000 * p2CitysCount;
+
         foreach (Unit u in GridContainer.Instance.UnitDic.Values)
         {
             u.SetMoveableDestroyToken();
@@ -571,7 +610,7 @@ public class CombatController : MonoBehaviour {
         p2Ready = false;
 
 
-
+        GameStatNotifier.Instance.Round++;
         Rounds++;
         RoundNumText.text = "Round " + Rounds.ToString();
         textP1Ready.text = "Player 1 not ready";
@@ -592,4 +631,256 @@ public class CombatController : MonoBehaviour {
         yield return 0;
     }
     #endregion
+
+    void AddListener()
+    {
+        NetMgr.srvConn.msgDist.AddListener("UnitMove", RecvUnitMove);
+        NetMgr.srvConn.msgDist.AddListener("GameStatus", RecvGameStatus);
+        NetMgr.srvConn.msgDist.AddListener("MoveDone", RecvMoveDone);
+        NetMgr.srvConn.msgDist.AddListener("CreateUnit", RecvCreateUnit);
+        NetMgr.srvConn.msgDist.AddListener("AttackInitiative", RecvAttackInitiative);
+        NetMgr.srvConn.msgDist.AddListener("AttackPassive", RecvAttackPassive);
+        NetMgr.srvConn.msgDist.AddListener("UnitDestroy", RecvUnitDestroy);
+        NetMgr.srvConn.msgDist.AddListener("BuildingCapture", RecvBuildingCapture);
+        NetMgr.srvConn.msgDist.AddListener("LoadUnit", RecvLoadUnit);
+        NetMgr.srvConn.msgDist.AddListener("UnloadUnit", RecvUnloadUnit);
+    }
+    #region 监听事件
+    //单位移动
+    //UnitMove 单位坐标 目的地坐标
+    private void RecvUnitMove(ProtocolBase protocol)
+    {
+        ProtocolBytes info = (ProtocolBytes)protocol;
+        int start=0;
+        info.GetString(start, ref start);  //"UnitMove"
+        Point startPo = info.GetPoint(start, ref start);
+        Point endPo = info.GetPoint(start, ref start);
+
+        PathNav.bMoving = true;
+
+        GridContainer.Instance.UnitDic[startPo].UnitMoveToTargetPos(endPo,OnMoveEnd);
+    }
+
+    //游戏状态
+    //GameStatus 玩家号0/1 状态
+    private void RecvGameStatus(ProtocolBase protocol)
+    {
+        int start = 0;
+        ProtocolBytes info = (ProtocolBytes)protocol;
+        info.GetString(start, ref start); //GameStatus
+        int id = info.GetInt(start, ref start);
+        if (id == 0)
+        {
+            p1Ready = true;
+            textP1Ready.text = "Player 1 is ready!";
+        }
+        else
+        {
+            p2Ready = true;
+            textP2Ready.text = "Player 2 is ready!";
+        }
+
+        if (p1Ready && p2Ready)
+        {
+            PathNav.bMoving = false;   //让正在移动的棋子立刻到达终点，进入下一回合
+            NextRound();
+        }
+
+        int status = info.GetInt(start, ref start);
+
+        int _id = Global.Instance.gameInfo.IsHost ? 0 : 1;
+        if (id == _id)
+        {
+            if (status == 1)
+            {
+                //NetMgr.srvConn.gameNet.SendStatus(true, GameNet.GameStatus.Win);
+                GameEndHandler(true);
+            }
+            else if (status == 2)
+            {
+                //NetMgr.srvConn.gameNet.SendStatus(false, GameNet.GameStatus.Lose);
+                GameEndHandler(false);
+            }
+        }
+        else
+        {
+            if (status == 1)
+            {
+                NetMgr.srvConn.gameNet.SendStatus(false, GameNet.GameStatus.Lose);
+                GameEndHandler(false);
+            }
+            else if (status == 2)
+            {
+                NetMgr.srvConn.gameNet.SendStatus(true, GameNet.GameStatus.Win);
+                GameEndHandler(true);
+            }
+        }
+    }
+
+    //移动结束
+    //MoveDone 坐标
+    private void RecvMoveDone(ProtocolBase protocol)
+    {
+        int start = 0;
+        ProtocolBytes info = (ProtocolBytes)protocol;
+        info.GetString(start,ref start);  //MoveDone
+        Point p = info.GetPoint(start, ref start);
+        Unit u = GridContainer.Instance.UnitDic[p];
+        u.SetMovedToken();
+        u.StopShowAttackRange();
+        firstClick = 1;
+    }
+
+    //创建部队
+    //CreateUnit 部队类型 坐标
+    private void RecvCreateUnit(ProtocolBase protocol)
+    {
+        int start = 0;
+        ProtocolBytes info = (ProtocolBytes)protocol;
+        info.GetString(start, ref start);
+        int type = info.GetInt(start, ref start);
+        Point p = info.GetPoint(start, ref start);
+
+        SideType side = GridContainer.Instance.TerrainDic[p].Side;
+        GridType newType = (GridType)type;
+        GridContainer.Instance.AddUnit(p, newType, side);
+        GameStatNotifier.Instance.Create[(int)side]++;
+        int cashCost = (int)Type.GetType(newType.ToString()).GetField("Price").GetValue(null);
+        GameStatNotifier.Instance.Cost[side == SideType.Friendly ? 0 : 1] += cashCost;
+        if (side == SideType.Friendly)
+            p1CashTotal -= cashCost;
+        else if (side == SideType.Enemy)
+            p2CashTotal -= cashCost;
+
+        Unit u = GridContainer.Instance.UnitDic[p];
+        u.StopMoveable();
+        u.SetMovedToken();
+        NetMgr.srvConn.gameNet.SendMoveDone(u.gridID);
+
+        UpdateTotalCashText();
+        HideBuildingPanel();
+    }
+
+    //部队主动攻击
+    //AttackInitiative 攻击者坐标 被攻击坐标
+    private void RecvAttackInitiative(ProtocolBase protocol)
+    {
+        int start = 0;
+        ProtocolBytes pb = (ProtocolBytes)protocol;
+        pb.GetString(start, ref start);            //AttackInitiative
+        Point s = pb.GetPoint(start, ref start);
+        Point e = pb.GetPoint(start, ref start);
+
+        Unit a = GridContainer.Instance.UnitDic[s];
+        Unit b = GridContainer.Instance.UnitDic[e]; 
+        a.AttackInitiative(b);  //攻击
+
+        if (a.isAlive())  //如果自己还活着
+        {
+            if (b.isAlive())  //如果敌人还活着，就会被动攻击我，长程火力除外
+            {
+                if (!a.isLongRangeUnit())
+                {
+                    NetMgr.srvConn.gameNet.SendAttackPassive(b.gridID, a.gridID);
+                }
+            }
+            else
+            {
+                NetMgr.srvConn.gameNet.SendUnitDestroy(b.gridID);
+                //b.BeDestroyed();   //如果敌人挂了，就被摧毁
+            }
+        }
+    }
+
+    //部队被动攻击
+    //AttackPassive 攻击者坐标 被攻击坐标
+    private void RecvAttackPassive(ProtocolBase protocol)
+    {
+        int start = 0;
+        ProtocolBytes pb = (ProtocolBytes)protocol;
+        pb.GetString(start, ref start);            //AttackPassive
+        Point s = pb.GetPoint(start, ref start);
+        Point e = pb.GetPoint(start, ref start);
+
+        Unit a = GridContainer.Instance.UnitDic[s];
+        Unit b = GridContainer.Instance.UnitDic[e];
+
+        a.AttackPassive(b);
+        firstClick = 1;
+    }
+
+    //销毁单位
+    //UnitDestroy 被销毁单位坐标
+    private void RecvUnitDestroy(ProtocolBase protocol)
+    {
+        int start = 0;
+        ProtocolBytes pb = (ProtocolBytes)protocol;
+        pb.GetString(start, ref start); //UnitDestroy
+        Point p = pb.GetPoint(start, ref start);
+
+        Unit u;
+        if(GridContainer.Instance.UnitDic.TryGetValue(p, out u))
+            u.BeDestroyed();
+    }
+
+    //占领建筑
+    //BuildingCapture 坐标
+    private void RecvBuildingCapture(ProtocolBase protocol)
+    {
+        int start = 0;
+        ProtocolBytes pb = (ProtocolBytes)protocol;
+        pb.GetString(start, ref start);  //UnitDestroy
+        Point p = pb.GetPoint(start, ref start);
+        Building b = GridContainer.Instance.TerrainDic[p] as Building;
+        Men m = GridContainer.Instance.UnitDic[p] as Men;
+        b.BeCapture(m);
+    }
+
+    //装载单位
+    //LoadUnit 单位 载具
+    private void RecvLoadUnit(ProtocolBase protocol)
+    {
+        int start = 0;
+        ProtocolBytes pb = (ProtocolBytes)protocol;
+        pb.GetString(start, ref start);//LoadUnit
+        Point unit = pb.GetPoint(start, ref start);
+        Point loader = pb.GetPoint(start, ref start);
+
+        ITransport carrier = (ITransport)GridContainer.Instance.UnitDic[loader];
+
+        if (carrier.Load(GridContainer.Instance.UnitDic[unit]))
+        {
+            firstClick = 1;
+        }
+    }
+
+    //卸载单位
+    //UnloadUnit 单位 载具
+    private void RecvUnloadUnit(ProtocolBase protocol)
+    {
+        int start = 0;
+        ProtocolBytes pb = (ProtocolBytes)protocol;
+        pb.GetString(start, ref start);//LoadUnit
+        Point unit = pb.GetPoint(start, ref start);
+        Point loader = pb.GetPoint(start, ref start);
+
+        ITransport it = (ITransport)GridContainer.Instance.UnitDic[loader];
+        it.UnLoad(unit);
+        foreach (TerrainBase tb in PayloadLandRange)
+            tb.StopHighLight();
+        PayloadLandRange.Clear();
+
+        firstClick = 1;
+    }
+    #endregion
+
+    void Update()
+    {
+        NetMgr.Update();//消息监听
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            PanelMgr.Instance.OpenPanel<UI.Panel.PausePanel>("");
+        }
+    }
 }

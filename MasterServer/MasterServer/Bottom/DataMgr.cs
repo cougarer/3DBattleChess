@@ -22,7 +22,7 @@ public class DataMgr
     {
         //数据库
         string connStr = "Database=game;Data Source = 127.0.0.1;";
-        connStr += "User Id=root;Password=123456;port=3306";
+        connStr += "User Id=root;Password=123456;port=3306;charset=utf8";
 
         sqlConn = new MySqlConnection(connStr);
         try

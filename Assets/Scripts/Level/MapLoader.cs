@@ -9,8 +9,8 @@ using UnityEngine;
 
 static class MapLoader
 {
-    static string LevelsDirectoryPath = Application.dataPath + "/Levels/";  //    Assets/Levels/
-    static string LevelsListPath = LevelsDirectoryPath + "LevelsList.txt";  //    Assets/Levels/LevelsList.txt
+    public static string LevelsDirectoryPath = Application.dataPath + "/Levels/";  //    Assets/Levels/
+    public static string LevelsListPath = LevelsDirectoryPath + "LevelsList.txt";  //    Assets/Levels/LevelsList.txt
 
     /// <summary>
     /// Contains all the offical maps
@@ -112,29 +112,30 @@ static class MapLoader
     /// 向自定义关卡路径中保存当前地图
     /// </summary>
     /// <param name="level"></param>
-    public static void SaveMap(Level level)
+    public static void SaveMap(Level level,bool editorMode)
     {
-
-        if (level.Xlimit < 16 || level.Zlimit < 16)
+        if (editorMode)
         {
-            throw new Exception("Map size cant be smaller than 16 !");
-        }
+            if (level.Xlimit < 16 || level.Zlimit < 16)
+            {
+                throw new Exception("Map size cant be smaller than 16 !");
+            }
 
-        //Read the data in GridController.instance's three Dictionaries
-        foreach (KeyValuePair<Point, TerrainBase> kvp in GridContainer.Instance.TerrainDic)
-        {
-            level.TerrainPosList.Add(kvp.Key);
-            level.TerrainTypeList.Add(kvp.Value.gridType);
-            level.TerrainSideList.Add(kvp.Value.Side);
-        }
+            //Read the data in GridController.instance's three Dictionaries
+            foreach (KeyValuePair<Point, TerrainBase> kvp in GridContainer.Instance.TerrainDic)
+            {
+                level.TerrainPosList.Add(kvp.Key);
+                level.TerrainTypeList.Add(kvp.Value.gridType);
+                level.TerrainSideList.Add(kvp.Value.Side);
+            }
 
-        foreach (KeyValuePair<Point, Unit> kvp in GridContainer.Instance.UnitDic)
-        {
-            level.UnitPosList.Add(kvp.Key);
-            level.UnitTypeList.Add(kvp.Value.gridType);
-            level.UnitSideList.Add(kvp.Value.Side);
+            foreach (KeyValuePair<Point, Unit> kvp in GridContainer.Instance.UnitDic)
+            {
+                level.UnitPosList.Add(kvp.Key);
+                level.UnitTypeList.Add(kvp.Value.gridType);
+                level.UnitSideList.Add(kvp.Value.Side);
+            }
         }
-
         //if the file doesn't exist then create one
         if (!Directory.Exists(LevelsDirectoryPath))
         {
@@ -192,5 +193,16 @@ static class MapLoader
         }
         CameraController.SetXZLimit(level.Xlimit, level.Zlimit);
         GridContainer.level = level;
+    }
+
+    public static Level GetLevel(string _levelName)
+    {
+        Level level;
+        if (customLevelDic.TryGetValue(_levelName, out level))
+            return level;
+        if (levelDic.TryGetValue(_levelName, out level))
+            return level;
+        PanelMgr.Instance.OpenPanel<UI.Tip.WarningTip>("", "找不到该地图文件！");
+        throw new Exception("找不到该地图文件！");
     }
 }

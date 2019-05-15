@@ -11,6 +11,20 @@ public class GameInfo
     public PlayerInfo playerInfo;
     public ServerOptionInfo serverOptionInfo;
 
+    public bool IsHost
+    {
+        get { return isHost; }
+        set { isHost = value; }
+    }
+    private bool isHost=true;
+
+    public string MapName
+    {
+        get { return mapName; }
+        set { mapName = value; }
+    }
+    private string mapName;
+
     public void Init()
     {
         if (!Directory.Exists(Application.dataPath + "/Info"))

@@ -45,14 +45,14 @@ public class MsgDistribution
         if (eventDic.TryGetValue(name,out method))
         {
             method(protocol);
+            Debug.Log("执行多次消息" + name);
         }
         if (onceDic.TryGetValue(name, out method))
         {
-            Debug.Log("执行分发消息" + name);
+            Debug.Log("执行单次消息" + name);
             method(protocol);
             onceDic[name] = null;
             onceDic.Remove(name);
-            Debug.Log("删除分发消息" + name);
         }
     }
 
@@ -116,6 +116,7 @@ public class MsgDistribution
     public void ClearEventDic()
     {
         eventDic.Clear();
+        Debug.Log("清除监听事件");
     }
 
     public string ShowEventDicElement()

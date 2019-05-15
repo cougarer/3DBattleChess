@@ -13,9 +13,10 @@ public class MainMenuMananger : MonoBehaviour
     void Start()
     {
         Application.runInBackground = true;
-        //PanelMgr.Instance.OpenPanel<LoginPanel>("");
+        Application.targetFrameRate = 60;
+        PanelMgr.Instance.OpenPanel<LoginPanel>("");
 
-        NetMgr.srvConn.proto = new ProtocolBytes();   //注意删除这个
+        /*NetMgr.srvConn.proto = new ProtocolBytes();   //注意删除这个
         NetMgr.srvConn.Connect("127.0.0.1",1234);  //注意删除这个
 
         //发送登录申请  //注意删除这个
@@ -25,9 +26,9 @@ public class MainMenuMananger : MonoBehaviour
         protocol.AddString("123456");//注意删除这个
         NetMgr.srvConn.Send(protocol);//注意删除这个 
 
-        Global.Instance.gameInfo.playerInfo.PlayerName = "MaxLykoS";//注意删除这个 
+        Global.Instance.gameInfo.playerInfo.PlayerName = "MaxLykoS";//注意删除这个*/ 
 
-        PanelMgr.Instance.OpenPanel<MenuButtonsPanel>("");
+        //PanelMgr.Instance.OpenPanel<MenuButtonsPanel>("");
     }
 
     void Update()

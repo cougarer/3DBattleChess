@@ -18,17 +18,18 @@ public class PlayerTempData
     public LobbyServer server;
 
     public bool isHost;
+    public string hostName;
 
     public PlayerTempData()
     {
-        isHost = false;
+        isHost = true;
 
         status = Status.None;
     }
 
     public void Init()
     {
-        isHost = false;
+        isHost = true;
         status = Status.None;
         server = null;
     }

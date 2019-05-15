@@ -66,9 +66,12 @@ public class Transporter : Vehicle, ITransport
         PayLoad.Show(pos);
         PayLoad.StopMoveable();
         PayLoad.SetMovedToken();
+        NetMgr.srvConn.gameNet.SendMoveDone(PayLoad.gridID);
+        PayLoad = null;
 
         StopMoveable();
         SetMovedToken();
+        NetMgr.srvConn.gameNet.SendMoveDone(gridID);
 
         return true;
     }

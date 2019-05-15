@@ -184,7 +184,6 @@ public abstract class Unit : Grid {
     {
         if (movedToken != null)
         {
-            Debug.Log("移动完毕图标未删除不能加载！");
             return;
         }
         movedToken = Instantiate(Resources.Load<GameObject>("Prefabs/Cursor/MovedToken")).transform;
@@ -350,6 +349,7 @@ public abstract class Unit : Grid {
     /// </summary>
     public void StopShowAttackRange()
     {
+        if (RangeList == null) return;
         foreach (Point p in RangeList)
         {
             GridContainer.Instance.TerrainDic[p].StopHighLight();
@@ -370,6 +370,9 @@ public abstract class Unit : Grid {
 
         HP -= firePower;
 
+        GameStatNotifier.Instance.BeAttack[(int)Side]+=firePower;
+        GameStatNotifier.Instance.Attack[((int)Side+1)%2] += firePower;
+
         UpdateHPText();
     }
 
@@ -383,14 +386,17 @@ public abstract class Unit : Grid {
     }
 
     /// <summary>
-    /// 龙卷风摧毁停车场（被摧毁）
+    /// 被摧毁
     /// </summary>
-    public void BeDestroyed()
+    public override void BeDestroyed()
     {
         if(movedToken!=null)
             Destroy(movedToken.gameObject);
         Destroy(gameObject);
         GridContainer.Instance.UnitDic.Remove(gridID);
+
+        GameStatNotifier.Instance.Destroyed[(int)Side]++;
+        GameStatNotifier.Instance.Elimination[((int)Side+1)%2]++;
     }
     #endregion
 

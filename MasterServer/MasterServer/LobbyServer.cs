@@ -59,6 +59,8 @@ public class LobbyServer
             PlayerTempData tempData = player.tempData;
             tempData.server = this;
             tempData.status = PlayerTempData.Status.NotPrepared;
+            tempData.hostName = Host.id;
+            tempData.isHost = false;
 
             string id = player.id;
             playerDic[id] = player;
