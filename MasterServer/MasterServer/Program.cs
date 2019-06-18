@@ -10,8 +10,8 @@ namespace MasterServer
     {
         static void Main(string[] args)
         {
-            //DataMgr dataMgr = new DataMgr();
-            Console.WriteLine("注意，当前已移除数据库模块");
+            DataMgr dataMgr = new DataMgr();
+            //Console.WriteLine("注意，当前已移除数据库模块");
             LobbyMgr lobby = new LobbyMgr();
 
             ServNet servNet = new ServNet();

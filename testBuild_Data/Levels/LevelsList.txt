@@ -1,4 +1,0 @@
-CustomLevel1
-Level1
-Island Haze
-MyMap

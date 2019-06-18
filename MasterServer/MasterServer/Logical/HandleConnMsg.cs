@@ -36,17 +36,17 @@ public partial class HandleConnMsg
         protocol.AddString("Register");
 
         //注册
-        //if (DataMgr.Instance.Register(id, pw))
-        //{
+        if (DataMgr.Instance.Register(id, pw))
+        {
             protocol.AddInt(0);
-        //}
-        //else
-        //{
-           // protocol.AddInt(-1);
-        //}
+        }
+        else
+        {
+            protocol.AddInt(-1);
+        }
 
         //创建角色
-        //DataMgr.Instance.CreatePlayer(id);
+        DataMgr.Instance.CreatePlayer(id);
 
         //返回协议给客户端
         conn.Send(protocol);
@@ -70,12 +70,12 @@ public partial class HandleConnMsg
         ProtocolBytes protocolRet = new ProtocolBytes();
         protocolRet.AddString("Login");
         //验证
-        //if (!DataMgr.Instance.CheckPassWord(id, pw))
-        //{
-        //    protocolRet.AddInt(-1);
-        //    conn.Send(protocolRet);
-        //    return;
-        //}
+        if (!DataMgr.Instance.CheckPassWord(id, pw))
+        {
+            protocolRet.AddInt(-1);
+            conn.Send(protocolRet);
+            return;
+        }
 
         //是否已经登录
         ProtocolBytes protocolLogout = new ProtocolBytes();
@@ -88,8 +88,8 @@ public partial class HandleConnMsg
         }
 
         //获取玩家数据
-        //PlayerData playerData = DataMgr.Instance.GetPlayerData(id);
-        PlayerData playerData = new PlayerData();   //注意删除
+        PlayerData playerData = DataMgr.Instance.GetPlayerData(id);
+        //PlayerData playerData = new PlayerData();   //注意删除
         if (playerData == null)
         {
             protocolRet.AddInt(-1);
